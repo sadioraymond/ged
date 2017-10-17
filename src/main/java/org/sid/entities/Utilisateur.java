@@ -26,6 +26,18 @@ public class Utilisateur implements Serializable{
 	private Collection<Documents> documentss;
 	@OneToMany(mappedBy="utilisateurs", fetch= FetchType.LAZY)
 	private Collection<DroitAttribues> droitattribues;
+	@OneToMany(mappedBy="utilisateurs", fetch= FetchType.LAZY)
+	private Collection<ConsultationDocument> consultationdocuments;
+	@OneToMany(mappedBy="utilisateurs", fetch= FetchType.LAZY)
+	private Collection<ProfilsAttribues> profilsattribues;
+	@OneToMany(mappedBy="utilisateurs", fetch= FetchType.LAZY)
+	private Collection<FichePoste> fichepostes;
+	@OneToMany(mappedBy="utilisateurs", fetch= FetchType.LAZY)
+	private Collection<BonCommande> boncommandes;
+	@OneToMany(mappedBy="utilisateurs", fetch= FetchType.LAZY)
+	private Collection<BonDachat> bondachats;
+	@OneToMany(mappedBy="utilisateurs", fetch= FetchType.LAZY)
+	private Collection<DemandeAppro> demandeappros;
 	public Utilisateur() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -115,6 +127,42 @@ public class Utilisateur implements Serializable{
 	public void setDroitattribues(Collection<DroitAttribues> droitattribues) {
 		this.droitattribues = droitattribues;
 	}
+	public Collection<ConsultationDocument> getConsultationdocuments() {
+		return consultationdocuments;
+	}
+	public void setConsultationdocuments(Collection<ConsultationDocument> consultationdocuments) {
+		this.consultationdocuments = consultationdocuments;
+	}
+	public Collection<ProfilsAttribues> getProfilsattribues() {
+		return profilsattribues;
+	}
+	public void setProfilsattribues(Collection<ProfilsAttribues> profilsattribues) {
+		this.profilsattribues = profilsattribues;
+	}
+	public Collection<FichePoste> getFichepostes() {
+		return fichepostes;
+	}
+	public void setFichepostes(Collection<FichePoste> fichepostes) {
+		this.fichepostes = fichepostes;
+	}
+	public Collection<BonCommande> getBoncommandes() {
+		return boncommandes;
+	}
+	public void setBoncommandes(Collection<BonCommande> boncommandes) {
+		this.boncommandes = boncommandes;
+	}
+	public Collection<BonDachat> getBondachats() {
+		return bondachats;
+	}
+	public void setBondachats(Collection<BonDachat> bondachats) {
+		this.bondachats = bondachats;
+	}
+	public Collection<DemandeAppro> getDemandeappros() {
+		return demandeappros;
+	}
+	public void setDemandeappros(Collection<DemandeAppro> demandeappros) {
+		this.demandeappros = demandeappros;
+	}
 	
-
+	
 }

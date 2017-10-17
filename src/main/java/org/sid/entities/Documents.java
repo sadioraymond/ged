@@ -22,6 +22,8 @@ private Collection<DroitAttribues> droitattribuess;
 @ManyToOne
 @JoinColumn(name="id_utilisateur")
 private Utilisateur utilisateurs;
+@OneToMany(mappedBy="documentss", fetch= FetchType.LAZY)
+private Collection<ConsultationDocument> consultationdocuments;
 public Documents() {
 	super();
 	// TODO Auto-generated constructor stub
@@ -61,6 +63,13 @@ public Documents(Date datecreation, Utilisateur utilisateurs) {
 	this.datecreation = datecreation;
 	this.utilisateurs = utilisateurs;
 }
+public Collection<ConsultationDocument> getConsultationdocuments() {
+	return consultationdocuments;
+}
+public void setConsultationdocuments(Collection<ConsultationDocument> consultationdocuments) {
+	this.consultationdocuments = consultationdocuments;
+}
+
 
 
 
