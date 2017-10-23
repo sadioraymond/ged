@@ -1,13 +1,16 @@
 package org.sid.entities;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class DetailFiche implements Serializable{
@@ -21,6 +24,8 @@ public class DetailFiche implements Serializable{
 	@ManyToOne
 	@JoinColumn(name="id_produit")
 	private Produit produits;
+	@OneToMany(mappedBy="detailfiches", fetch= FetchType.LAZY)
+	private Collection<BonSortie> bonsorties;
 	public DetailFiche() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -61,6 +66,12 @@ public class DetailFiche implements Serializable{
 	}
 	public void setProduits(Produit produits) {
 		this.produits = produits;
+	}
+	public Collection<BonSortie> getBonsorties() {
+		return bonsorties;
+	}
+	public void setBonsorties(Collection<BonSortie> bonsorties) {
+		this.bonsorties = bonsorties;
 	}
 	
 }

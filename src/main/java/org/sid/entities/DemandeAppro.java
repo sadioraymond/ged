@@ -24,6 +24,18 @@ public class DemandeAppro implements Serializable{
 	private Utilisateur utilisateurs;
 	@OneToMany(mappedBy="demandeappros", fetch= FetchType.LAZY)
 	private Collection<BonDachat> bondachats;
+	@OneToMany(mappedBy="demandeappros", fetch= FetchType.LAZY)
+	private Collection<BonSortie> bonsorties;
+	@ManyToOne
+	@JoinColumn(name="id_demandeachat")
+	private DemandeAchat demandeachats;
+	
+	public DemandeAchat getDemandeachats() {
+		return demandeachats;
+	}
+	public void setDemandeachats(DemandeAchat demandeachats) {
+		this.demandeachats = demandeachats;
+	}
 	public Long getId_demandeappro() {
 		return id_demandeappro;
 	}
@@ -65,11 +77,28 @@ public class DemandeAppro implements Serializable{
 		this.date = date;
 		this.utilisateurs = utilisateurs;
 	}
+	
+	public DemandeAppro(String code_demande, String texte, Date date, Utilisateur utilisateurs,
+			DemandeAchat demandeachats) {
+		super();
+		this.code_demande = code_demande;
+		this.texte = texte;
+		this.date = date;
+		this.utilisateurs = utilisateurs;
+		this.demandeachats = demandeachats;
+	}
 	public Collection<BonDachat> getBondachats() {
 		return bondachats;
 	}
 	public void setBondachats(Collection<BonDachat> bondachats) {
 		this.bondachats = bondachats;
 	}
+	public Collection<BonSortie> getBonsorties() {
+		return bonsorties;
+	}
+	public void setBonsorties(Collection<BonSortie> bonsorties) {
+		this.bonsorties = bonsorties;
+	}
+	
 	
 }

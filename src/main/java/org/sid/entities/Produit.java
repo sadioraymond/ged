@@ -23,6 +23,9 @@ public class Produit implements Serializable{
 	private Collection<DetailFiche> detailfiches;
 	@OneToMany(mappedBy="produits", fetch= FetchType.LAZY)
 	private Collection<DetailCommande> detailcommandes;
+	@ManyToOne
+	@JoinColumn(name="id_categorie")
+	private Categorie categories;
 	public Produit() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -31,6 +34,18 @@ public class Produit implements Serializable{
 		super();
 		this.code_produit = code_produit;
 		this.libelle = libelle;
+	}
+	public Produit(String code_produit, String libelle, Categorie categories) {
+		super();
+		this.code_produit = code_produit;
+		this.libelle = libelle;
+		this.categories = categories;
+	}
+	public Categorie getCategories() {
+		return categories;
+	}
+	public void setCategories(Categorie categories) {
+		this.categories = categories;
 	}
 	public Long getId_produit() {
 		return id_produit;

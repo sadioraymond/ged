@@ -3,14 +3,20 @@ package org.sid.entities;
 import java.io.Serializable;
 import java.util.Collection;
 
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Fournisseur implements Serializable {
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="Type_Fournisseur",discriminatorType=DiscriminatorType.STRING,length=4)
+public abstract class Fournisseur implements Serializable {
 	@Id @GeneratedValue
 	private Long id_fournisseur;
 	private String code_fournisseur;
@@ -19,6 +25,14 @@ public class Fournisseur implements Serializable {
 	private String email;
 	@OneToMany(mappedBy="fournisseurs", fetch= FetchType.LAZY)
 	private Collection<DetailBon> detailbons;
+	@OneToMany(mappedBy="fournisseurs", fetch= FetchType.LAZY)
+	private Collection<BonLivraison> bonlivraisons;
+	public Collection<BonLivraison> getBonlivraisons() {
+		return bonlivraisons;
+	}
+	public void setBonlivraisons(Collection<BonLivraison> bonlivraisons) {
+		this.bonlivraisons = bonlivraisons;
+	}
 	public Long getId_fournisseur() {
 		return id_fournisseur;
 	}

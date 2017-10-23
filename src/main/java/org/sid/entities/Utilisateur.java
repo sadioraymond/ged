@@ -22,7 +22,7 @@ public class Utilisateur implements Serializable{
 	private String sexe;
 	private String situation_matri;
 	private String email;
-	@OneToMany(mappedBy="utilisateurs", fetch= FetchType.LAZY)
+	@OneToMany(mappedBy="usercreateur", fetch= FetchType.LAZY)
 	private Collection<Documents> documentss;
 	@OneToMany(mappedBy="utilisateurs", fetch= FetchType.LAZY)
 	private Collection<DroitAttribues> droitattribues;
@@ -38,6 +38,10 @@ public class Utilisateur implements Serializable{
 	private Collection<BonDachat> bondachats;
 	@OneToMany(mappedBy="utilisateurs", fetch= FetchType.LAZY)
 	private Collection<DemandeAppro> demandeappros;
+	@OneToMany(mappedBy="utilisateurs", fetch= FetchType.LAZY)
+	private Collection<BonSortie> bonsorties;
+	@OneToMany(mappedBy="utilisateurs", fetch= FetchType.LAZY)
+	private Collection<DemandeAchat> demandeachats;
 	public Utilisateur() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -163,6 +167,17 @@ public class Utilisateur implements Serializable{
 	public void setDemandeappros(Collection<DemandeAppro> demandeappros) {
 		this.demandeappros = demandeappros;
 	}
-	
+	public Collection<BonSortie> getBonsorties() {
+		return bonsorties;
+	}
+	public void setBonsorties(Collection<BonSortie> bonsorties) {
+		this.bonsorties = bonsorties;
+	}
+	public Collection<DemandeAchat> getDemandeachats() {
+		return demandeachats;
+	}
+	public void setDemandeachats(Collection<DemandeAchat> demandeachats) {
+		this.demandeachats = demandeachats;
+	}
 	
 }

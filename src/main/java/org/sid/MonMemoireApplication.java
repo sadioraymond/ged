@@ -5,7 +5,10 @@ import java.util.Date;
 import org.sid.dao.BonCommandeRepository;
 import org.sid.dao.BonDachatRepository;
 import org.sid.dao.BonLivraisonRepository;
+import org.sid.dao.BonSortieRepository;
+import org.sid.dao.CategorieRepository;
 import org.sid.dao.ConsultationDocumentRepository;
+import org.sid.dao.DemandeAchatRepository;
 import org.sid.dao.DemandeApproRepository;
 import org.sid.dao.DetailBonRepository;
 import org.sid.dao.DetailCommandeRepository;
@@ -26,8 +29,13 @@ import org.sid.dao.UtilisateurRepository;
 import org.sid.entities.BonCommande;
 import org.sid.entities.BonDachat;
 import org.sid.entities.BonLivraison;
+import org.sid.entities.BonSortie;
+import org.sid.entities.Categorie;
 import org.sid.entities.ConsultationDocument;
+import org.sid.entities.DemandeAchat;
 import org.sid.entities.DemandeAppro;
+import org.sid.entities.DemandeEmploi;
+import org.sid.entities.DemandePrestation;
 import org.sid.entities.DetailBon;
 import org.sid.entities.DetailCommande;
 import org.sid.entities.DetailFiche;
@@ -35,9 +43,11 @@ import org.sid.entities.DetailLivraison;
 import org.sid.entities.Documents;
 import org.sid.entities.DroitAttribues;
 import org.sid.entities.DroitDacces;
+import org.sid.entities.Entreprise;
 import org.sid.entities.FichePoste;
 import org.sid.entities.FicheSortie;
 import org.sid.entities.Fournisseur;
+import org.sid.entities.Personne;
 import org.sid.entities.Poste;
 import org.sid.entities.Produit;
 import org.sid.entities.Profil;
@@ -93,6 +103,12 @@ public class MonMemoireApplication implements CommandLineRunner {
 	private BonDachatRepository bondachrepo;
 	@Autowired
 	private DemandeApproRepository demandeaprepo;
+	@Autowired
+	private BonSortieRepository bonsorrepo;
+	@Autowired
+	private CategorieRepository categorepo;
+	@Autowired
+	private DemandeAchatRepository demandeachatrepo;
 	public static void main(String[] args) {
 		SpringApplication.run(MonMemoireApplication.class, args);
 	}
@@ -106,7 +122,9 @@ public class MonMemoireApplication implements CommandLineRunner {
 				"SCAT Urbam","777183060",new Date(),"Masc","Marié","cabou@gamil.com"));
 		Utilisateur us2=userrepo.save(new Utilisateur("us03","SADIO","Marie",
 				"SCAT Urbam","775618351",new Date(),"Féminin","Célibataire","maite@gamil.com"));
-		Documents doc=documentrepository.save(new Documents(new Date(),us));
+		DemandeAchat doc=demandeachatrepo.save(new DemandeAchat(new Date(),us,"DEM001",true,us1));
+		Documents doc1=documentrepository.save(new DemandePrestation(new Date(),us,"Raymond","test","DP001"));
+		Documents doc2=documentrepository.save(new DemandeEmploi(new Date(),us2,"DE001"));
 		DroitDacces droit=droitdaccesrepo.save(new DroitDacces("CO1","Ajouter"));
 		DroitAttribues dr=droitattribuesrepo.save(new DroitAttribues(doc,droit,new Date(),new Date(),us1));
 		DroitAttribues drs=droitattribuesrepo.save(new DroitAttribues(doc,droit,new Date(),new Date(),us2));
@@ -116,7 +134,8 @@ public class MonMemoireApplication implements CommandLineRunner {
 		Poste pos=posterepo.save(new Poste("POO1","Directeur Général"));
 		FichePoste fichepos=ficheposterepo.save(new FichePoste(us2,pos,new Date(),new Date()));
 		BonCommande bc=boncomrepo.save(new BonCommande("Bon001",new Date()));
-		Fournisseur four=fournirepo.save(new Fournisseur("C0001","777922484","SCAT URBAM","four@dof.com"));
+		Fournisseur four=fournirepo.save(new Entreprise("C0001","777922484","SCAT URBAM","four@dof.com","DofTech"));
+		Fournisseur four1=fournirepo.save(new Personne("C0001","775618351","SCAT","sadio@dof.com","Raymond SADIO"));
 		DetailBon dtb=detailrepo.save(new DetailBon(bc,four,new Date()));
 		Produit prod=produitrepo.save(new Produit("P001","Telephone"));
 		BonLivraison bl=bonlivrepo.save(new BonLivraison("BL001",new Date()));
@@ -131,6 +150,11 @@ public class MonMemoireApplication implements CommandLineRunner {
 		BonCommande bc1=boncomrepo.save(new BonCommande("BON002",us2,new Date(),bonach));
 		DemandeAppro dem=demandeaprepo.save(new DemandeAppro("DEM001","kfjksdknklnlfkn snkljklg",new Date(),us));
 		BonDachat bonach1=bondachrepo.save(new BonDachat("Bon002",new Date(),"djljfjklsd fdsjqjfkljsljdf",us,dem));
+		DemandeAppro dem1=demandeaprepo.save(new DemandeAppro("DEM002","texte bi la bindeu",new Date(),us,doc));
+		BonSortie bs=bonsorrepo.save(new BonSortie("BS001",new Date(),us2,dem1,dtfic));
+		Categorie cat=categorepo.save(new Categorie("CAT001","Materiaux Bureaux"));
+		Produit prod1=produitrepo.save(new Produit("P001","Telephone",cat));
+		BonLivraison bl2=bonlivrepo.save(new BonLivraison("BL001",new Date(),bc1,four));
 		
 	}
 }
