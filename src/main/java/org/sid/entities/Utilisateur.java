@@ -22,14 +22,15 @@ public class Utilisateur implements Serializable{
 	private String sexe;
 	private String situation_matri;
 	private String email;
+	private String password;
+	private Boolean active;
+	private String username;
 	@OneToMany(mappedBy="usercreateur", fetch= FetchType.LAZY)
 	private Collection<Documents> documentss;
 	@OneToMany(mappedBy="utilisateurs", fetch= FetchType.LAZY)
 	private Collection<DroitAttribues> droitattribues;
 	@OneToMany(mappedBy="utilisateurs", fetch= FetchType.LAZY)
 	private Collection<ConsultationDocument> consultationdocuments;
-	@OneToMany(mappedBy="utilisateurs", fetch= FetchType.LAZY)
-	private Collection<ProfilsAttribues> profilsattribues;
 	@OneToMany(mappedBy="utilisateurs", fetch= FetchType.LAZY)
 	private Collection<FichePoste> fichepostes;
 	@OneToMany(mappedBy="utilisateurs", fetch= FetchType.LAZY)
@@ -58,6 +59,42 @@ public class Utilisateur implements Serializable{
 		this.sexe = sexe;
 		this.situation_matri = situation_matri;
 		this.email = email;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public Boolean getActive() {
+		return active;
+	}
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	public Utilisateur(String code_user, String nom_user, String prenom_user, String adresse, String tel,
+			Date datenaiss, String sexe, String situation_matri, String email, String password, Boolean active,
+			String username) {
+		super();
+		this.code_user = code_user;
+		this.nom_user = nom_user;
+		this.prenom_user = prenom_user;
+		this.adresse = adresse;
+		this.tel = tel;
+		this.datenaiss = datenaiss;
+		this.sexe = sexe;
+		this.situation_matri = situation_matri;
+		this.email = email;
+		this.password = password;
+		this.active = active;
+		this.username = username;
 	}
 	public Long getId_user() {
 		return id_user;
@@ -136,12 +173,6 @@ public class Utilisateur implements Serializable{
 	}
 	public void setConsultationdocuments(Collection<ConsultationDocument> consultationdocuments) {
 		this.consultationdocuments = consultationdocuments;
-	}
-	public Collection<ProfilsAttribues> getProfilsattribues() {
-		return profilsattribues;
-	}
-	public void setProfilsattribues(Collection<ProfilsAttribues> profilsattribues) {
-		this.profilsattribues = profilsattribues;
 	}
 	public Collection<FichePoste> getFichepostes() {
 		return fichepostes;

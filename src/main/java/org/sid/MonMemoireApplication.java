@@ -22,9 +22,9 @@ import org.sid.dao.FicheSortieRepository;
 import org.sid.dao.FournisseurRepository;
 import org.sid.dao.PosteRepository;
 import org.sid.dao.ProduitRepository;
-import org.sid.dao.ProfilRepository;
-import org.sid.dao.ProfilsAttribuesRepository;
+import org.sid.dao.RolesRepository;
 import org.sid.dao.ServiceRepository;
+import org.sid.dao.User_RolesRepository;
 import org.sid.dao.UtilisateurRepository;
 import org.sid.entities.BonCommande;
 import org.sid.entities.BonDachat;
@@ -50,9 +50,9 @@ import org.sid.entities.Fournisseur;
 import org.sid.entities.Personne;
 import org.sid.entities.Poste;
 import org.sid.entities.Produit;
-import org.sid.entities.Profil;
-import org.sid.entities.ProfilsAttribues;
+import org.sid.entities.Roles;
 import org.sid.entities.Service;
+import org.sid.entities.Users_Roles;
 import org.sid.entities.Utilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -71,10 +71,6 @@ public class MonMemoireApplication implements CommandLineRunner {
 	private UtilisateurRepository userrepo;
 	@Autowired
 	private ConsultationDocumentRepository consdocrepo;
-	@Autowired
-	private ProfilRepository profilrepository;
-	@Autowired
-	private ProfilsAttribuesRepository profatrirepo;
 	@Autowired
 	private PosteRepository posterepo;
 	@Autowired
@@ -109,6 +105,10 @@ public class MonMemoireApplication implements CommandLineRunner {
 	private CategorieRepository categorepo;
 	@Autowired
 	private DemandeAchatRepository demandeachatrepo;
+	@Autowired
+	private RolesRepository rolesrepo;
+	@Autowired
+	private User_RolesRepository userrolerepo;
 	public static void main(String[] args) {
 		SpringApplication.run(MonMemoireApplication.class, args);
 	}
@@ -117,11 +117,17 @@ public class MonMemoireApplication implements CommandLineRunner {
 	public void run(String... arg0) throws Exception {
 		// TODO Auto-generated method stub
 		Utilisateur us=userrepo.save(new Utilisateur("us01","SADIO","WALY RAYMOND",
-				"SCAT Urbam","777922484",new Date(),"Masc","Célibataire","sadiowaly@gamil.com"));
+				"SCAT Urbam","777922484",new Date(),"Masc","Célibataire","sadiowaly@gamil.com","Saphila",true,"raymond"));
 		Utilisateur us1=userrepo.save(new Utilisateur("us02","CABOU","RAYMOND",
-				"SCAT Urbam","777183060",new Date(),"Masc","Marié","cabou@gamil.com"));
+				"SCAT Urbam","777183060",new Date(),"Masc","Marié","cabou@gamil.com","Saphila",true,"maite"));
 		Utilisateur us2=userrepo.save(new Utilisateur("us03","SADIO","Marie",
-				"SCAT Urbam","775618351",new Date(),"Féminin","Célibataire","maite@gamil.com"));
+				"SCAT Urbam","775618351",new Date(),"Féminin","Célibataire","maite@gamil.com","Saphila",true,"ray"));
+		Roles rol=new Roles();
+		rol.setRole("ADMIN");
+		Roles rol1=new Roles();
+		rol.setRole("USER");
+		Users_Roles usr=userrolerepo.save(new Users_Roles("raymond","ADMIN"));
+		Users_Roles usr1=userrolerepo.save(new Users_Roles("raymond","USER"));
 		DemandeAchat doc=demandeachatrepo.save(new DemandeAchat(new Date(),us,"DEM001",true,us1));
 		Documents doc1=documentrepository.save(new DemandePrestation(new Date(),us,"Raymond","test","DP001"));
 		Documents doc2=documentrepository.save(new DemandeEmploi(new Date(),us2,"DE001"));
@@ -129,8 +135,6 @@ public class MonMemoireApplication implements CommandLineRunner {
 		DroitAttribues dr=droitattribuesrepo.save(new DroitAttribues(doc,droit,new Date(),new Date(),us1));
 		DroitAttribues drs=droitattribuesrepo.save(new DroitAttribues(doc,droit,new Date(),new Date(),us2));
 		ConsultationDocument cd=consdocrepo.save(new ConsultationDocument(doc,us,new Date(),new Date()));
-		Profil pro=profilrepository.save(new Profil("Administrateur","ADminOOO1"));
-		ProfilsAttribues proatt=profatrirepo.save(new ProfilsAttribues(us,pro,new Date(),new Date()));
 		Poste pos=posterepo.save(new Poste("POO1","Directeur Général"));
 		FichePoste fichepos=ficheposterepo.save(new FichePoste(us2,pos,new Date(),new Date()));
 		BonCommande bc=boncomrepo.save(new BonCommande("Bon001",new Date()));
