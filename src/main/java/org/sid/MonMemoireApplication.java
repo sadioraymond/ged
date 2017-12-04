@@ -116,7 +116,7 @@ public class MonMemoireApplication implements CommandLineRunner {
 	@Override
 	public void run(String... arg0) throws Exception {
 		// TODO Auto-generated method stub
-		Utilisateur us=userrepo.save(new Utilisateur("us01","SADIO","WALY RAYMOND",
+	/*	Utilisateur us=userrepo.save(new Utilisateur("us01","SADIO","WALY RAYMOND",
 				"SCAT Urbam","777922484",new Date(),"Masc","Célibataire","sadiowaly@gamil.com","Saphila",true,"raymond"));
 		Utilisateur us1=userrepo.save(new Utilisateur("us02","CABOU","RAYMOND",
 				"SCAT Urbam","777183060",new Date(),"Masc","Marié","cabou@gamil.com","Saphila",true,"maite"));
@@ -158,7 +158,7 @@ public class MonMemoireApplication implements CommandLineRunner {
 		BonSortie bs=bonsorrepo.save(new BonSortie("BS001",new Date(),us2,dem1,dtfic));
 		Categorie cat=categorepo.save(new Categorie("CAT001","Materiaux Bureaux"));
 		Produit prod1=produitrepo.save(new Produit("P001","Telephone",cat));
-		BonLivraison bl2=bonlivrepo.save(new BonLivraison("BL001",new Date(),bc1,four));
+		BonLivraison bl2=bonlivrepo.save(new BonLivraison("BL001",new Date(),bc1,four));*/
 		
 	}
 }
