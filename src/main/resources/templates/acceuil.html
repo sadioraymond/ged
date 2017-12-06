@@ -44,7 +44,7 @@
   </head>
 
   <body>
-
+ 
   <section id="container" >
       <!-- **********************************************************************************************************************************************************
       TOP BAR CONTENT & NOTIFICATIONS
@@ -55,7 +55,7 @@
                   <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
               </div>
             <!--logo start-->
-            <a href="acceuil.html" class="logo"><b>Electro-Mechanical Works </b></a>
+            <a href="acceuil.html" class="logo"><b>DASHGUM FREE</b></a>
             <!--logo end-->
             <div class="nav notify-row" id="top_menu">
                 <!--  notification start -->
@@ -220,14 +220,14 @@
                   <li class="mt">
                       <a class="active" href="acceuil.html">
                           <i class="fa fa-dashboard"></i>
-                          <span>Acceuil</span>
+                          <span>Dashboard</span>
                       </a>
                   </li>
 
                   <li class="sub-menu">
                       <a href="javascript:;" >
                           <i class="fa fa-desktop"></i>
-                          <span>Gestion Produits</span>
+                          <span>UI Elements</span>
                       </a>
                       <ul class="sub">
                           <li><a  href="general.html">General</a></li>
@@ -239,7 +239,7 @@
                   <li class="sub-menu">
                       <a href="javascript:;" >
                           <i class="fa fa-cogs"></i>
-                          <span>Paramétres</span>
+                          <span>Components</span>
                       </a>
                       <ul class="sub">
                           <li><a  href="calendar.html">Calendar</a></li>
@@ -253,7 +253,7 @@
                           <span>Gestion Documents</span>
                       </a>
                       <ul class="sub">
-                          <li><a  href="blank.html">Blank Page</a></li>
+                          <li><a  href="blank.html">Upload Documents</a></li>
                           <li><a  href="login.html">Login</a></li>
                           <li><a  href="lock_screen.html">Lock Screen</a></li>
                       </ul>
@@ -261,16 +261,25 @@
                   <li class="sub-menu">
                       <a href="javascript:;" >
                           <i class="fa fa-tasks"></i>
-                          <span>Inventaire Stock</span>
+                          <span>Getion Produits</span>
                       </a>
                       <ul class="sub">
-                          <li><a  href="form_component.html">Form Components</a></li>
+                          <li><a  th:href="@{/ajoutypeproduit}">Ajout Categorie</a></li>
+                      </ul>
+                      <ul class="sub">
+                          <li><a  th:href="@{/allcategories}">Liste Categorie</a></li>
+                      </ul>
+                        <ul class="sub">
+                          <li><a  th:href="@{/ajoutproduit}">Ajout Produit</a></li>
+                      </ul>
+                       <ul class="sub">
+                          <li><a  th:href="@{/allproduits}">Liste Produit</a></li>
                       </ul>
                   </li>
                   <li class="sub-menu">
                       <a href="javascript:;" >
                           <i class="fa fa-th"></i>
-                          <span>Gestion Utilisateurs</span>
+                          <span>Data Tables</span>
                       </a>
                       <ul class="sub">
                           <li><a  href="basic_table.html">Basic Table</a></li>
@@ -280,7 +289,7 @@
                   <li class="sub-menu">
                       <a href="javascript:;" >
                           <i class=" fa fa-bar-chart-o"></i>
-                          <span>Historique de Navigation</span>
+                          <span>Charts</span>
                       </a>
                       <ul class="sub">
                           <li><a  href="morris.html">Morris</a></li>
@@ -357,8 +366,8 @@
 									</div>
 	                      		</div>
 								<canvas id="serverstatus01" height="120" width="120"></canvas>
-								<script >
-								var doughnutData = [
+								<script>
+									var doughnutData = [
 											{
 												value: 70,
 												color:"#68dff0"
@@ -424,7 +433,7 @@
 						  			<h5>DROPBOX STATICS</h5>
                       			</div>
 								<canvas id="serverstatus02" height="120" width="120"></canvas>
-								<script type="application/javascript">
+								<script>
 									var doughnutData = [
 											{
 												value: 60,
@@ -589,9 +598,9 @@
                       	</div>
                       </div>
 
-                  <!--      USERS ONLINE SECTION
+                       <!-- USERS ONLINE SECTION -->
 						<h3>TEAM MEMBERS</h3>
-                      First Member
+                      <!-- First Member -->
                       <div class="desc">
                       	<div class="thumb">
                       		<img class="img-circle" src="assets/img/ui-divya.jpg" width="35px" height="35px" align=""/>
@@ -602,7 +611,7 @@
                       		</p>
                       	</div>
                       </div>
-                      Second Member
+                      <!-- Second Member -->
                       <div class="desc">
                       	<div class="thumb">
                       		<img class="img-circle" src="assets/img/ui-sherman.jpg" width="35px" height="35px" align=""/>
@@ -613,7 +622,7 @@
                       		</p>
                       	</div>
                       </div>
-                      Third Member
+                      <!-- Third Member -->
                       <div class="desc">
                       	<div class="thumb">
                       		<img class="img-circle" src="assets/img/ui-danro.jpg" width="35px" height="35px" align=""/>
@@ -624,7 +633,7 @@
                       		</p>
                       	</div>
                       </div>
-                      Fourth Member
+                      <!-- Fourth Member -->
                       <div class="desc">
                       	<div class="thumb">
                       		<img class="img-circle" src="assets/img/ui-zac.jpg" width="35px" height="35px" align=""/>
@@ -635,7 +644,7 @@
                       		</p>
                       	</div>
                       </div>
-                      Fifth Member
+                      <!-- Fifth Member -->
                       <div class="desc">
                       	<div class="thumb">
                       		<img class="img-circle" src="assets/img/ui-sam.jpg" width="35px" height="35px" align=""/>
@@ -645,7 +654,7 @@
                       		   <muted>Available</muted>
                       		</p>
                       	</div>
-                      </div> -->
+                      </div>
 
                         <!-- CALENDAR-->
                         <div id="calendar" class="mb">
@@ -670,7 +679,7 @@
       <!--footer start-->
       <footer class="site-footer">
           <div class="text-center">
-              Build by Raymond SADIO
+              2014 - Alvarez.is
               <a href="acceuil.html#" class="go-top">
                   <i class="fa fa-angle-up"></i>
               </a>
@@ -699,13 +708,13 @@
     <script src="assets/js/sparkline-chart.js"></script>    
 	<script src="assets/js/zabuto_calendar.js"></script>	
 	
-	<script type="application/javascript">
+	<script type="text/javascript">
         $(document).ready(function () {
         var unique_id = $.gritter.add({
             // (string | mandatory) the heading of the notification
-            title: 'Bienvenue a Electro-Mechanical Works GED!',
+            title: 'Welcome to Dashgum!',
             // (string | mandatory) the text inside the notification
-            text: '<a href="http://blacktie.co" target="_blank" style="color:#ffd777"></a>',
+            text: 'Hover me to enable the Close Button. You can hide the left sidebar clicking on the button next to the logo. Free version for <a href="http://blacktie.co" target="_blank" style="color:#ffd777">BlackTie.co</a>.',
             // (string | optional) the image to display on the left
             image: 'assets/img/ui-sam.jpg',
             // (bool | optional) if you want it to fade out on its own or just sit there
@@ -758,3 +767,4 @@
 
   </body>
 </html>
+ 
