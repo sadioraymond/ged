@@ -31,7 +31,10 @@ public class MemoireController {
 	public String inscription() {
 		return "inscription";
 	}
-
+	@RequestMapping("/creationdoc")
+	public String creationdoc() {
+		return "uploaddoc";
+	}
 	@RequestMapping("/ajoutypeproduit")
 	public String ajoutypeproduit() {
 		return "ajouttypeproduit";
@@ -50,8 +53,8 @@ public class MemoireController {
 	}
 
 	@RequestMapping(value = "/saveProduit", method = RequestMethod.POST)
-	public String saveProduit(Model model, String libelle,Long id_categorie) {
-		memoiremetier.saveproduit(libelle,id_categorie);
+	public String saveProduit(Model model, String libelle,Long optionsListId) {
+		memoiremetier.saveproduit(libelle,optionsListId);
 		return "ajoutproduit";
 	}
 

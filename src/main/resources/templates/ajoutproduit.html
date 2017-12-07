@@ -250,7 +250,7 @@
 								<i class="fa fa-angle-right"></i>Ajout Produits
 							</h4>
 							<form class="form-horizontal style-form"
-								th:action="@{/saveProduit}" method="post">
+								th:action="@{/saveProduit}" th:object="${listCategories}" method="post">
 								<div class="form-group">
 									<label class="col-sm-2 col-sm-2 control-label">Libelé
 										du Produit</label>
@@ -261,9 +261,9 @@
 								<br></br> <br></br> <br></br> <label
 									class="col-sm-2 col-sm-2 control-label">Catégorie du
 									Produit</label> 
-									<select >
+									<select id="optionsList" name="optionsListId">
 									<option th:each="var : ${listCategories}" th:value="${var.id_categorie}"
-										th:text="${var.libelle}"></option>
+										th:text="${var.libelle}"></option>	
 								</select>
 								 <br></br> <br></br> <br></br>
 								<button type="submit" class="btn btn-primary">Enregistrer</button>
