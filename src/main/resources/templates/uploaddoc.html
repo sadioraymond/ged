@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content=""/>
-<meta name="author" content="Dashboard"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="" />
+<meta name="author" content="Dashboard" />
 <meta name="keyword"
-	content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina"/>
+	content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina" />
 
 <title>DASHGUM - Bootstrap Admin Template</title>
 <!-- Bootstrap core CSS -->
-<link href="assets/css/bootstrap.css" rel="stylesheet"/>
+<link href="assets/css/bootstrap.css" rel="stylesheet" />
 <!--external css-->
 <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
 
 <!-- Custom styles for this template -->
-<link href="assets/css/style.css" rel="stylesheet"/>
-<link href="assets/css/style-responsive.css" rel="stylesheet"/>
+<link href="assets/css/style.css" rel="stylesheet" />
+<link href="assets/css/style-responsive.css" rel="stylesheet" />
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
@@ -110,8 +110,9 @@
 					<!-- settings end -->
 					<!-- inbox dropdown start-->
 					<li id="header_inbox_bar" class="dropdown"><a
-						data-toggle="dropdown" class="dropdown-toggle" href="acceuil.html#">
-							<i class="fa fa-envelope-o"></i> <span class="badge bg-theme">5</span>
+						data-toggle="dropdown" class="dropdown-toggle"
+						href="acceuil.html#"> <i class="fa fa-envelope-o"></i> <span
+							class="badge bg-theme">5</span>
 					</a>
 						<ul class="dropdown-menu extended inbox">
 							<div class="notify-arrow notify-arrow-green"></div>
@@ -119,25 +120,25 @@
 								<p class="green">You have 5 new messages</p>
 							</li>
 							<li><a href="acceuil.html#"> <span class="photo"><img
-										alt="avatar" src="assets/img/ui-zac.jpg"/></span> <span
+										alt="avatar" src="assets/img/ui-zac.jpg" /></span> <span
 									class="subject"> <span class="from">Zac Snider</span> <span
 										class="time">Just now</span>
 								</span> <span class="message"> Hi mate, how is everything? </span>
 							</a></li>
 							<li><a href="acceuil.html#"> <span class="photo"><img
-										alt="avatar" src="assets/img/ui-divya.jpg"/></span> <span
+										alt="avatar" src="assets/img/ui-divya.jpg" /></span> <span
 									class="subject"> <span class="from">Divya Manian</span>
 										<span class="time">40 mins.</span>
 								</span> <span class="message"> Hi, I need your help with this. </span>
 							</a></li>
 							<li><a href="acceuil.html#"> <span class="photo"><img
-										alt="avatar" src="assets/img/ui-danro.jpg"/></span> <span
+										alt="avatar" src="assets/img/ui-danro.jpg" /></span> <span
 									class="subject"> <span class="from">Dan Rogers</span> <span
 										class="time">2 hrs.</span>
 								</span> <span class="message"> Love your new Dashboard. </span>
 							</a></li>
 							<li><a href="acceuil.html#"> <span class="photo"><img
-										alt="avatar" src="assets/img/ui-sherman.jpg"/></span> <span
+										alt="avatar" src="assets/img/ui-sherman.jpg" /></span> <span
 									class="subject"> <span class="from">Dj Sherman</span> <span
 										class="time">4 hrs.</span>
 								</span> <span class="message"> Please, answer asap. </span>
@@ -167,7 +168,7 @@
 
 					<p class="centered">
 						<a href="profile.html"><img src="assets/img/ui-sam.jpg"
-							class="img-circle" width="60"/></a>
+							class="img-circle" width="60" /></a>
 					</p>
 					<h5 class="centered">Marcel Newman</h5>
 
@@ -236,12 +237,13 @@
 				<h3>
 					<i class="fa fa-angle-right"></i> Blank Page
 				</h3>
-				<div class="row mt">
-					<div class="col-lg-12">
-						<textarea name="txt_text" id="editor1" class="ckeditor"></textarea>
-						
-					</div>
-				</div>
+				<form method="POST" th:action="@{/upload}" enctype="multipart/form-data">
+					 <fieldset>
+                <legend>Envoi de fichier</legend>
+					<input type="file" name="file" /><br />
+					<br /> <input type="submit" value="Submit" />
+					</fieldset>
+				</form>
 
 			</section>
 		</section>

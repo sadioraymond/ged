@@ -18,4 +18,6 @@ public interface MemoireMetier {
 	public void deletecategorie(Long id_categorie);
 	public void modifiercategorie(Long id_categorie,String libelle);
 	public List<Categorie> allcategorie();
+	public Produit findoneproduit(Long id_produit);
+	public void modifierproduit(Long id_produit,String libelle,Long id_categorie);
 }

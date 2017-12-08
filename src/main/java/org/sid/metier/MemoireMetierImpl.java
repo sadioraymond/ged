@@ -86,5 +86,23 @@ public class MemoireMetierImpl implements MemoireMetier{
 		cat=categorierepository.findAll();
 		return cat;
 	}
+	@Override
+	public Produit findoneproduit(Long id_produit) {
+		// TODO Auto-generated method stub
+		Produit prod=new Produit();
+		prod=produitrepository.findOne(id_produit);
+		return prod;
+	}
+	@Override
+	public void modifierproduit(Long id_produit, String libelle, Long id_categorie) {
+		// TODO Auto-generated method stub
+		Categorie cat=new Categorie();
+		cat=findonecategorie(id_categorie);
+		Produit prod=new Produit();
+		prod=findoneproduit(id_produit);
+		prod.setCategories(cat);
+		prod.setLibelle(libelle);
+		produitrepository.save(prod);
+	}
 
 }
