@@ -28,6 +28,17 @@ public DroitAttribues() {
 	// TODO Auto-generated constructor stub
 }
 
+
+public Long getIddroitattribues() {
+	return iddroitattribues;
+}
+
+
+public void setIddroitattribues(Long iddroitattribues) {
+	this.iddroitattribues = iddroitattribues;
+}
+
+
 public DroitAttribues(Documents documentss, DroitDacces droitdaccess, Date datedeb, Date datefin,
 		Utilisateur utilisateurs) {
 	super();

@@ -23,9 +23,19 @@ public class DemandeAchat extends Documents{
 	private Utilisateur utilisateurs;
 	@OneToMany(mappedBy="demandeachats", fetch= FetchType.LAZY)
 	private Collection<DemandeAppro> demandeappros;
+	private String textedemande;
 	public String getCode_demandeachat() {
 		return code_demandeachat;
 	}
+	
+	public String getTextedemande() {
+		return textedemande;
+	}
+
+	public void setTextedemande(String textedemande) {
+		this.textedemande = textedemande;
+	}
+
 	public void setCode_demandeachat(String code_demandeachat) {
 		this.code_demandeachat = code_demandeachat;
 	}

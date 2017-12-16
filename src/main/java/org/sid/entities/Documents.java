@@ -30,12 +30,26 @@ private Collection<DroitAttribues> droitattribuess;
 private Utilisateur usercreateur;
 @OneToMany(mappedBy="documentss", fetch= FetchType.LAZY)
 private Collection<ConsultationDocument> consultationdocuments;
+private String titre;
 public Documents() {
 	super();
 	// TODO Auto-generated constructor stub
 }
 public Long getIddoc() {
 	return iddoc;
+}
+
+public Utilisateur getUsercreateur() {
+	return usercreateur;
+}
+public void setUsercreateur(Utilisateur usercreateur) {
+	this.usercreateur = usercreateur;
+}
+public String getTitre() {
+	return titre;
+}
+public void setTitre(String titre) {
+	this.titre = titre;
 }
 public void setIddoc(Long iddoc) {
 	this.iddoc = iddoc;
