@@ -2,6 +2,7 @@ package org.sid.entities;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,6 +18,8 @@ public class FicheSortie implements Serializable{
 	private String libelle;
 	@OneToMany(mappedBy="fichesorties", fetch= FetchType.LAZY)
 	private Collection<DetailFiche> detailfiches;
+	private Date date;
+	private int etat;
 	public FicheSortie() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -25,6 +28,19 @@ public class FicheSortie implements Serializable{
 		super();
 		this.code_fiche = code_fiche;
 		this.libelle = libelle;
+	}
+	
+	public int getEtat() {
+		return etat;
+	}
+	public void setEtat(int etat) {
+		this.etat = etat;
+	}
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
 	}
 	public Long getId_fichesortie() {
 		return id_fichesortie;

@@ -299,36 +299,40 @@
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-          	<h3><i class="fa fa-angle-right"></i> Liste des Demande d'achat</h3>
-              <div class="row mt" th:if="${listachat}">
+          	<h3><i class="fa fa-angle-right"></i> Liste des Bon d'achats</h3>
+              <div class="row mt" th:if="${listfour}">
                   <div class="col-md-12">
                       <div class="content-panel">
                           <table class="table table-striped table-advance table-hover">
-	                  	  	  <h4><i class="fa fa-angle-right"></i> Demande d'achat</h4>
+	                  	  	  <h4><i class="fa fa-angle-right"></i> Bon D'achat</h4>
                               <thead>
                             <tr>
-							<th>Code Demande</th>
-							<th>Titre</th>
+							<th>Type Fournisseur</th>
+							<th>Nom Fournisseur</th>
+							<th>Adresse Fournisseur</th>
+							<th>Tel Fournisseur</th>
 						</tr>
                               </thead>
                               <tbody>
-                              <tr th:each="c:${listachat}">
-							<td th:text="${c.code_demandeachat}"></td>
-							<td th:text="${c.titre}"></td>
-							<th th:if="${c.valide}==true"><a th:href="@{/findonedemandeachat(id_doc=${c.iddoc})}"><i class=" fa fa-check">Validé</i></a></th>
-							<th th:if="${c.valide}==false"><a th:href="@{/findonedemandeachat(id_doc=${c.iddoc})}"><i class="fa fa-times">Non Validé</i></a></th>
-							<!-- <th><a th:href="@{/findonedemandeachat(id_doc=${c.iddoc})}">
+                              <tr th:each="c:${listfour}">
+							<td th:text="${c.class.simpleName}"></td>
+							<td th:if="${c.class.simpleName}==Personne" th:text="${c.nompersonne}"></td>
+							<td th:if="${c.class.simpleName}==Entreprise" th:text="${c.nomEntreprise}"></td>
+							<td th:text="${c.adresse}"></td>
+							<td th:text="${c.tel}"></td>
+							<th ><a th:href="@{/findonefournisseurandmodif(id_fournisseur=${c.id_fournisseur})}">
 							<i class="fa fa-pencil"> Modifier</i></a>
-							</th> -->
-							<th><a th:href="@{/delecategorie(id_service=${c.iddoc})}">
-							<i class="fa fa-trash-o "></i> Supprimer</a></th>
+							</th>
+							<th ><a th:href="@{/findoneournisseurandsuppr(id_fournisseur=${c.id_fournisseur})}">
+							<i class="fa fa-trash-o ">Supprimer</i></a>
+							</th>
 						</tr>
                               </tbody>
                           </table>
                           	<div class="container">
 						<ul class="nav nav-pills">
 							<li th:each="p,status:${pages}"><a
-								th:href="@{/historiquedemandeachat(page=${status.index})}"
+								th:href="@{/historiquefournisseur(page=${status.index})}"
 								th:text="${status.index}"></a></li>
 						</ul>
 					</div>

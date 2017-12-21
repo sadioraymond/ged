@@ -23,13 +23,32 @@ public abstract class Fournisseur implements Serializable {
 	private String tel;
 	private String adresse;
 	private String email;
+	private String nom;
 	@OneToMany(mappedBy="fournisseurs", fetch= FetchType.LAZY)
 	private Collection<DetailBon> detailbons;
 	@OneToMany(mappedBy="fournisseurs", fetch= FetchType.LAZY)
 	private Collection<BonLivraison> bonlivraisons;
+	private int etat;
 	public Collection<BonLivraison> getBonlivraisons() {
 		return bonlivraisons;
 	}
+	
+	public int getEtat() {
+		return etat;
+	}
+	
+	public String getNom() {
+		return nom;
+	}
+
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
+
+	public void setEtat(int etat) {
+		this.etat = etat;
+	}
+
 	public void setBonlivraisons(Collection<BonLivraison> bonlivraisons) {
 		this.bonlivraisons = bonlivraisons;
 	}

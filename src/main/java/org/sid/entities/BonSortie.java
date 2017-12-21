@@ -24,10 +24,20 @@ public class BonSortie implements Serializable{
 	@ManyToOne
 	@JoinColumn(name="id_detailfiche")
 	private DetailFiche detailfiches;
+	private int etat;
 	public BonSortie() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	public int getEtat() {
+		return etat;
+	}
+
+	public void setEtat(int etat) {
+		this.etat = etat;
+	}
+
 	public Long getId_bonsortie() {
 		return id_bonsortie;
 	}

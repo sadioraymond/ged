@@ -258,8 +258,21 @@
                           <li><a  th:href="@{/creationdocument}">Upload Document</a></li>
                           <li><a th:href="@{/demandeachat}">Création demande d'achat</a></li>
                           <li><a th:href="@{/historiquedemandeachat}">Historique demande d'achat</a></li>
-                          <li><a  href="login.html">Login</a></li>
+                          <li><a th:href="@{/historiquedemandeappro}">Historique demande d'approvisionnement</a></li>
                           <li><a  href="lock_screen.html">Lock Screen</a></li>
+                      </ul>
+                  </li>
+                                    <li class="sub-menu">
+                      <a href="javascript:;" >
+                          <i class="fa fa-book"></i>
+                          <span>Gestion Commandes</span>
+                      </a>
+                      <ul class="sub">
+                          <li><a  th:href="@{/historiquebonachat}">Liste des Bon d'achat</a></li>
+                          <li><a  th:href="@{/creationboncommande}">Creation Bon de Commande</a></li>
+                          <li><a  th:href="@{/historiquebonacommande}">Liste Bon Commande</a></li>
+                          <li><a  th:href="@{/creationbonlivraison}">Creation Bon de Livraison</a></li>
+                          <li><a  th:href="@{/historiquebonlivraison}">Liste Bon Livraison</a></li>
                       </ul>
                   </li>
                   <li class="sub-menu">
@@ -283,21 +296,21 @@
                   <li class="sub-menu">
                       <a href="javascript:;" >
                           <i class="fa fa-th"></i>
-                          <span>Data Tables</span>
+                          <span>Gestion Stock</span>
                       </a>
                       <ul class="sub">
-                          <li><a  href="basic_table.html">Basic Table</a></li>
-                          <li><a  href="responsive_table.html">Responsive Table</a></li>
+                          <li><a  th:href="@{/creationfichesortie}">Creation Fiche de Sortie</a></li>
+                          <li><a  th:href="@{/historiquefichedesortie}">Liste Fiche De Sortie</a></li>
                       </ul>
                   </li>
                   <li class="sub-menu">
                       <a href="javascript:;" >
                           <i class=" fa fa-bar-chart-o"></i>
-                          <span>Charts</span>
+                          <span>Gestion Fournisseur</span>
                       </a>
                       <ul class="sub">
-                          <li><a  href="morris.html">Morris</a></li>
-                          <li><a  href="chartjs.html">Chartjs</a></li>
+                          <li><a  th:href="@{/ajoutfournisseur}">Ajout Fournisseur</a></li>
+                          <li><a  th:href="@{/historiquefournisseur}">Liste Fournisseur</a></li>
                       </ul>
                   </li>
 

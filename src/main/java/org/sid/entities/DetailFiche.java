@@ -26,10 +26,20 @@ public class DetailFiche implements Serializable{
 	private Produit produits;
 	@OneToMany(mappedBy="detailfiches", fetch= FetchType.LAZY)
 	private Collection<BonSortie> bonsorties;
+	private int etat;
 	public DetailFiche() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	public int getEtat() {
+		return etat;
+	}
+
+	public void setEtat(int etat) {
+		this.etat = etat;
+	}
+
 	public DetailFiche(Date date, int qte, FicheSortie fichesorties, Produit produits) {
 		super();
 		this.date = date;

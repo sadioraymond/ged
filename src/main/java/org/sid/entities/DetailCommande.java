@@ -19,6 +19,7 @@ public class DetailCommande implements Serializable {
 	@JoinColumn(name="id_produit")
 	private Produit produits;
 	private int qte;
+	private int etat;
 	public DetailCommande() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -28,6 +29,13 @@ public class DetailCommande implements Serializable {
 		this.boncommandes = boncommandes;
 		this.produits = produits;
 		this.qte = qte;
+	}
+	
+	public int getEtat() {
+		return etat;
+	}
+	public void setEtat(int etat) {
+		this.etat = etat;
 	}
 	public Long getId_detailcommande() {
 		return id_detailcommande;

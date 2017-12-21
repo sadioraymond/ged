@@ -29,10 +29,29 @@ public class DemandeAppro implements Serializable{
 	@ManyToOne
 	@JoinColumn(name="id_demandeachat")
 	private DemandeAchat demandeachats;
+	private String titre;
+	private int accorde;
 	
 	public DemandeAchat getDemandeachats() {
 		return demandeachats;
 	}
+	
+	public int getAccorde() {
+		return accorde;
+	}
+
+	public void setAccorde(int accorde) {
+		this.accorde = accorde;
+	}
+
+	public String getTitre() {
+		return titre;
+	}
+
+	public void setTitre(String titre) {
+		this.titre = titre;
+	}
+
 	public void setDemandeachats(DemandeAchat demandeachats) {
 		this.demandeachats = demandeachats;
 	}

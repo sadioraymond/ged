@@ -237,13 +237,15 @@
 				<h3>
 					<i class="fa fa-angle-right"></i>Confection Demande d'approvisionnement
 				</h3>
-				<form method="POST" th:action="@{/savedemandeachat}"
+				<form method="POST" th:action="@{/savedemandeappro(id_demandeachat=${id_demandeachat},valide=${valide})}"
 					enctype="multipart/form-data">
 					<div class="col-md-6">
+					<input type="hidden" name="id_demandeachat"/>
+					<input type="hidden" name="valide"/>
 						 <label class="col-sm-2 col-sm-2 control-label">Titre de la Demande</label>
 						 <br></br>
 						<div class="col-sm-10">
-							<input type="text" class="form-control" th:value="${titre}" name="titre" disabled="true"/>
+							<input type="text" class="form-control" th:value="${titre}" name="titre"/>
 						</div>
 						<br></br>
 						<br></br>
@@ -255,9 +257,6 @@
 						<br></br>
 						<br></br>
 						<br></br>
-						Validité
-						<input th:if="${valide}==true" type="checkbox" name="option" th:name="idChecked" checked="true"/>
-						<input th:if="${valide}==false" type="checkbox" name="option1" th:name="idChecked1" />
 					</div>
 					<div class="col-md-12" align="center">
 						<br /> <input type="submit" value="Enregistrer" />

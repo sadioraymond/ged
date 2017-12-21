@@ -1,5 +1,8 @@
 package org.sid.web;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.sameInstance;
+
 import java.awt.Desktop;
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,18 +12,33 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.JOptionPane;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.sid.dao.CategorieRepository;
+import org.sid.entities.BonCommande;
+import org.sid.entities.BonDachat;
+import org.sid.entities.BonLivraison;
+import org.sid.entities.BonSortie;
 import org.sid.entities.Categorie;
 import org.sid.entities.DemandeAchat;
+import org.sid.entities.DemandeAppro;
+import org.sid.entities.DetailCommande;
+import org.sid.entities.DetailFiche;
+import org.sid.entities.DetailLivraison;
 import org.sid.entities.Documents;
 import org.sid.entities.DroitAttribues;
 import org.sid.entities.DroitDacces;
+import org.sid.entities.Entreprise;
+import org.sid.entities.FicheSortie;
+import org.sid.entities.Fournisseur;
+import org.sid.entities.Personne;
 import org.sid.entities.Poste;
 import org.sid.entities.Produit;
 import org.sid.entities.Service;
@@ -61,6 +79,67 @@ public class MemoireController {
 		 memoiremetier.savedemandeachat(titre,textbi);
 			return "demandeachat";
 		}
+		 @RequestMapping("/ajoutfournisseur")
+		public String ajoutfournisseur() {
+			return "ajoutfournisseur";
+		}
+		 @RequestMapping("/saveFournisseur")
+		public String saveFournisseur(Model model,String adresse,String tel,String email,String nom,
+				String typefournisseur) {
+			 if(typefournisseur.equals("Entr")) {
+				 memoiremetier.saveEntreprise(adresse, tel, email, nom);
+			 }else {
+				 if(typefournisseur.equals("Pers")) {
+					 memoiremetier.savePersonne(adresse, tel, email, nom);
+				 }
+			 }
+			return "redirect:ajoutfournisseur";
+		}
+		 @RequestMapping("/modifierFournisseur")
+			public String modifierFournisseur(Model model,@RequestParam(name="idfour") Long idfour,
+					String adresse,String tel,
+					String email,String nom,
+					String typefournisseur,@RequestParam(name="typefour")String typefour) {
+			 if(typefour.equals("Entreprise")) {
+				 if(typefournisseur.equals("Entr")) {
+					 memoiremetier.updateEntreprise(idfour, adresse, tel, email, nom);
+				 }else {
+					 if(typefournisseur.equals("Pers")) {
+						 memoiremetier.updatesavepersonne(idfour, adresse, tel, email, nom);
+					 }
+				 }
+			 }else {
+				 if(typefour.equals("Personne")) {
+					 if(typefournisseur.equals("Pers")) {
+						 memoiremetier.updatePersonne(idfour, adresse, tel, email, nom);
+					 }else {
+						 if(typefournisseur.equals("Entr")) {
+							 memoiremetier.updatesaveentreprise(idfour, adresse, tel, email, nom);
+						 }
+					 }
+				 }
+			 }
+				return "redirect:historiquefournisseur";
+			}
+			 @RequestMapping("/findoneournisseurandsuppr")
+			public String findoneournisseurandsuppr(Model model,@RequestParam(name="id_fournisseur") Long idfour) {
+				memoiremetier.deletefournisseur(idfour);
+				return "redirect:historiquefournisseur";
+			}
+		 @RequestMapping("/historiquefournisseur")
+			public String historiquefournisseur(Model model, @RequestParam(name = "page", defaultValue = "0") int page,
+					@RequestParam(name = "size", defaultValue = "5") int size) {
+					try {
+						Page<Fournisseur> pageFour=memoiremetier.listFournisseur(page, size);
+						model.addAttribute("listfour", pageFour.getContent());
+						int [] pages=new int [pageFour.getTotalPages()];
+						model.addAttribute("pages",pages);
+					} catch (Exception e) {
+						// TODO: handle exception
+						model.addAttribute("exception", e);
+					}
+				return "historiquefournisseur";
+			}
 		 @RequestMapping("/historiquedemandeachat")
 		public String historiquedemandeachat(Model model, @RequestParam(name = "page", defaultValue = "0") int page,
 				@RequestParam(name = "size", defaultValue = "5") int size) {
@@ -77,6 +156,78 @@ public class MemoireController {
 				}
 			return "historiquedemandeachat";
 		}
+		 @RequestMapping("/historiquebonachat")
+			public String historiquebonachat(Model model, @RequestParam(name = "page", defaultValue = "0") int page,
+					@RequestParam(name = "size", defaultValue = "5") int size) {
+					try {
+						Page<BonDachat> pageBonAchat = memoiremetier.listbonahat(page, size);
+						model.addAttribute("listbonachat", pageBonAchat.getContent());
+						int [] pages=new int [pageBonAchat.getTotalPages()];
+						model.addAttribute("pages",pages);
+					} catch (Exception e) {
+						// TODO: handle exception
+						model.addAttribute("exception", e);
+					}
+				return "historiquebonachat";
+			}
+			 @RequestMapping("/historiquebonacommande")
+			public String historiquebonacommande(Model model, @RequestParam(name = "page", defaultValue = "0") int page,
+					@RequestParam(name = "size", defaultValue = "5") int size) {
+					try {
+						Page<BonCommande> pageBonCom = memoiremetier.listBonCommande(page, size);
+						model.addAttribute("listboncom", pageBonCom.getContent());
+						int [] pages=new int [pageBonCom.getTotalPages()];
+						model.addAttribute("pages",pages);
+					} catch (Exception e) {
+						// TODO: handle exception
+						model.addAttribute("exception", e);
+					}
+				return "historiquebonacommande";
+			}
+			 @RequestMapping("/historiquebonlivraison")
+			public String historiquebonlivraison(Model model, @RequestParam(name = "page", defaultValue = "0") int page,
+					@RequestParam(name = "size", defaultValue = "5") int size) {
+					try {
+						Page<BonLivraison> pageBonLiv = memoiremetier.listBonLivraison(page, size);
+						model.addAttribute("listbonliv", pageBonLiv.getContent());
+						int [] pages=new int [pageBonLiv.getTotalPages()];
+						model.addAttribute("pages",pages);
+					} catch (Exception e) {
+						// TODO: handle exception
+						model.addAttribute("exception", e);
+					}
+				return "historiquebonlivraison";
+			}
+			 @RequestMapping("/historiquefichedesortie")
+			public String historiquefichedesortie(Model model, @RequestParam(name = "page", defaultValue = "0") int page,
+					@RequestParam(name = "size", defaultValue = "5") int size) {
+					try {
+						Page<FicheSortie> pageFichSortie=memoiremetier.listfiche(page, size);
+						model.addAttribute("listfichesor", pageFichSortie.getContent());
+						int [] pages=new int [pageFichSortie.getTotalPages()];
+						model.addAttribute("pages",pages);
+					} catch (Exception e) {
+						// TODO: handle exception
+						model.addAttribute("exception", e);
+					}
+				return "historiquebonsortie";
+			}
+		 @RequestMapping("/historiquedemandeappro")
+			public String historiquedemandeappro(Model model, @RequestParam(name = "page", defaultValue = "0") int page,
+					@RequestParam(name = "size", defaultValue = "5") int size) {
+					try {
+						Page<DemandeAppro> pageAppro = memoiremetier.listdemandeappro(page, size);
+						model.addAttribute("listappro", pageAppro.getContent());
+						int [] pages=new int [pageAppro.getTotalPages()];
+						model.addAttribute("pages",pages);
+						/*model.addAttribute("valide", true);
+						model.addAttribute("nonvalide", false);*/
+					} catch (Exception e) {
+						// TODO: handle exception
+						model.addAttribute("exception", e);
+					}
+				return "historiquedemandeappro";
+			}
     @RequestMapping("/creationdocument")
    	public String creationdocument(Model model, @RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "5") int size) {
@@ -224,6 +375,25 @@ public class MemoireController {
 		memoiremetier.savecategorie(libelle);
 		return "ajouttypeproduit";
 	}
+	@RequestMapping("/test")
+	public String test() {
+		return "test";
+	}
+	@RequestMapping(value = "/savedemandeappro", method = RequestMethod.POST)
+	public String savedemandeappro(Model model, String titre,String texte,@RequestParam(name="id_demandeachat") 
+	Long id_demandeachat,@RequestParam(name="valide") 
+	Boolean valide) {
+		if(valide==false) {
+			Boolean validite=true;
+			memoiremetier.validedeamandeachat(id_demandeachat,validite);
+		}else {
+			Boolean validite=false;
+			memoiremetier.validedeamandeachat(id_demandeachat,validite);
+		}
+		memoiremetier.savedemandeappro(titre, texte,id_demandeachat);
+		model.addAttribute("valide", valide);
+		return "test";
+	}
 	@RequestMapping(value = "/saveService", method = RequestMethod.POST)
 	public String saveService(Model model, String libelle) {
 		memoiremetier.saveService(libelle);
@@ -240,10 +410,254 @@ public class MemoireController {
 		memoiremetier.saveproduit(libelle,optionsListId);
 		return "ajoutproduit";
 	}
+	@RequestMapping(value = "/savebonachat", method = RequestMethod.POST)
+	public String savebonachat(Model model, String titre,String texte, 
+			@RequestParam(name="id_demandeappro") Long id_demandeappro) {
+		memoiremetier.savebonachat(titre, texte, id_demandeappro);
+		return "ajoutproduit";
+	}
+	@RequestMapping(value = "/findbonachat", method = RequestMethod.POST)
+	public String findbonachat(Model model,String optionsListId,
+			@RequestParam(name="id_demandeappro") Long id_demandeappro) {
+		if(optionsListId.equals("Non Accordé") || optionsListId.equals("Accordé Partiellement")) {
+			if(optionsListId.equals("Non Accordé")) {
+				int accord=0;
+				memoiremetier.updateaccorddemandeappro(id_demandeappro, accord);
+			}else {
+				if(optionsListId.equals("Accordé Partiellement")) {
+					int accord=1;
+					memoiremetier.updateaccorddemandeappro(id_demandeappro, accord);
+				}
+			}
+			model.addAttribute("id_demandeappro", id_demandeappro);
+			return "ajoutbondachat";
+		}
+		return "test";
+	}
 	@RequestMapping(value = "/savePoste", method = RequestMethod.POST)
 	public String savePoste(Model model, String libelle,Long optionsListId) {
 		memoiremetier.saveposte(libelle, optionsListId);
 		return "ajoutposte";
+	}
+	@RequestMapping(value = "/generationcommande")
+	public String generationcommande() {
+		return "redirect:creationboncommande";
+	}
+	@RequestMapping(value = "/generationlivraison")
+	public String generationlivraison() {
+		return "redirect:creationbonlivraison";
+	}
+	@RequestMapping(value = "/generationbonsortie")
+	public String generationbonsortie() {
+		return "redirect:creationfichesortie";
+	}
+	@RequestMapping(value = "/creationboncommande")
+	public String creationboncommande(Model model,@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "30") int size) {
+		List<BonDachat> bon=null;
+		bon=memoiremetier.allbondachat();
+		String Produit="Produit";
+		Page<Produit> pageProduits = memoiremetier.listProduit(page, size);
+		model.addAttribute("listebon", bon);
+		model.addAttribute("listProduits", pageProduits.getContent());
+		model.addAttribute("Produit", Produit);
+		int [] pages=new int [pageProduits.getTotalPages()];
+		model.addAttribute("pages",pages);
+		int produit=0;
+		model.addAttribute("produit",produit);
+		return "creationboncommande";
+	}
+	@RequestMapping(value = "/creationbonlivraison")
+	public String creationbonlivraison(Model model,@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "30") int size) {
+		List<BonCommande> listbon=memoiremetier.allCommandes();
+		List<Fournisseur> listfour=memoiremetier.allFournisseurs();
+		Page<Produit> pageProduits = memoiremetier.listProduit(page, size);
+		model.addAttribute("listebon", listbon);
+		model.addAttribute("listfour", listfour);
+		model.addAttribute("listProduits", pageProduits.getContent());
+		int [] pages=new int [pageProduits.getTotalPages()];
+		model.addAttribute("pages",pages);
+		int produit=0;
+		model.addAttribute("produit",produit);
+		return "creationbonlivraison";
+	}
+	@RequestMapping(value = "/creationfichesortie")
+	public String creationfichesortie(Model model,@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "30") int size) {
+		Page<Produit> pageProduits = memoiremetier.listProduit(page, size);
+		model.addAttribute("listProduits", pageProduits.getContent());
+		int [] pages=new int [pageProduits.getTotalPages()];
+		model.addAttribute("pages",pages);
+		List<DemandeAppro> listappro=memoiremetier.listappro();
+		model.addAttribute("listappro",listappro);
+		return "creationfichesortie";
+	}
+	@RequestMapping(value = "/saveBonCommande")
+	public String saveBonCommande(Model model,@RequestParam(name="produit")
+    List<String> produit,Long optionsListId, @RequestParam(name="qte")
+    List<String> qte,String titre) {
+		String stringArrayprod[] = produit.toArray(new String[0]);
+		String stringArrayqte[] = qte.toArray(new String[0]);
+		List<String> tamp=new ArrayList<>();
+		for(int i=0,j=0;i<stringArrayqte.length;i++,j++) {
+			if(!(stringArrayqte[i].equals(""))) {
+				tamp.add(stringArrayqte[i]+"-"+stringArrayprod[j]);
+			}
+		}
+		memoiremetier.savecommande(tamp, titre, optionsListId);
+		BonCommande bc=new BonCommande();
+		bc=memoiremetier.dernierbon();
+		List<DetailCommande> dtc=memoiremetier.detailbycommande(bc.getId_boncommande());
+		model.addAttribute("titre", bc.getTitre());
+		model.addAttribute("bonachat", bc.getBondachats().getTitre());
+		model.addAttribute("detailcommande", dtc);
+		return "generationcommande";
+	}
+	@RequestMapping(value = "/saveBonLivraison")
+	public String saveBonLivraison(Model model,@RequestParam(name="produit")
+    List<String> produit,Long optionsListId,Long optionsListIds, @RequestParam(name="qte")
+    List<String> qte,@RequestParam(name="prix")List<String> prix,String titre) {
+		String stringArrayprod[] = produit.toArray(new String[0]);
+		String stringArrayqte[] = qte.toArray(new String[0]);
+		String stringArrayprix[] = prix.toArray(new String[0]);
+		List<String> tamp=new ArrayList<>();
+		for(int i=0,j=0,k=0;i<stringArrayqte.length;i++,j++,k++) {
+			if(!(stringArrayqte[i].equals(""))) {
+				tamp.add(stringArrayqte[i]+"-"+stringArrayprod[j]+"-"+stringArrayprix[k]);
+			}
+		}
+		memoiremetier.savelivraison(tamp, titre, optionsListId, optionsListIds);
+		BonLivraison bc=new BonLivraison();
+		bc=memoiremetier.dernierbonliv();
+		List<DetailLivraison> dtc=memoiremetier.detailbyLivraison(bc.getId_bonlivraison());
+		model.addAttribute("titre", bc.getTitre());
+		model.addAttribute("boncommande", bc.getBoncommandes().getTitre());
+		model.addAttribute("fournisseur", bc.getFournisseurs().getNom());
+		model.addAttribute("detailcommande", dtc);
+		return "generationlivraison";
+	}
+	@RequestMapping(value = "/saveficheSortie")
+	public String saveficheSortie(Model model,@RequestParam(name="produit")
+    List<String> produit,Long optionsListId, @RequestParam(name="qte")
+    List<String> qte,String libelle) {
+		String stringArrayprod[] = produit.toArray(new String[0]);
+		String stringArrayqte[] = qte.toArray(new String[0]);
+		List<String> tamp=new ArrayList<>();
+		for(int i=0,j=0;i<stringArrayqte.length;i++,j++) {
+			if(!(stringArrayqte[i].equals(""))) {
+				tamp.add(stringArrayqte[i]+"-"+stringArrayprod[j]);
+			}
+		}
+		memoiremetier.savefichesortie(tamp, libelle, optionsListId);
+		FicheSortie bc=new FicheSortie();
+		bc=memoiremetier.dernierefiche();
+		List<DetailFiche> dtc=memoiremetier.detailbyfiche(bc.getId_fichesortie());
+		model.addAttribute("libelle", bc.getLibelle());
+		List<BonSortie> bonso=memoiremetier.bonbydetailfice(dtc);
+		model.addAttribute("bonsortie", dtc);
+		model.addAttribute("demandeappro",bonso.get(0).getDemandeappros().getTitre());
+		return "generationbonsortie";
+	}
+	@RequestMapping(value = "/saveBonCommandes")
+	public String saveBonCommandes(Model model,@RequestParam(name="produit")
+    List<String> produit,@RequestParam(name="qte")List<String> qte,
+    @RequestParam(name="idbon")Long idbon) {
+		String stringArrayprod[] = produit.toArray(new String[0]);
+		String stringArrayqte[] = qte.toArray(new String[0]);
+		List<String> tamp=new ArrayList<>();
+		for(int i=0,j=0;i<stringArrayqte.length;i++,j++) {
+			if(!(stringArrayqte[i].equals(""))) {
+				tamp.add(stringArrayqte[i]+"-"+stringArrayprod[j]);
+			}
+		}
+		BonCommande bc=new BonCommande();
+		bc=memoiremetier.findoneboncommande(idbon);
+		memoiremetier.savemodifcommande(tamp, bc);
+		List<DetailCommande> dtc=memoiremetier.detailbycommande(bc.getId_boncommande());
+		model.addAttribute("titre", bc.getTitre());
+		model.addAttribute("bonachat", bc.getBondachats().getTitre());
+		model.addAttribute("detailcommande", dtc);
+		return "generationcommande";
+	}
+	@RequestMapping(value = "/saveFiches")
+	public String saveFiches(Model model,@RequestParam(name="produit")
+    List<String> produit,@RequestParam(name="qte")List<String> qte,
+    @RequestParam(name="idbon")Long idbon,@RequestParam(name="demandeappros") Long demandeappros) {
+		String stringArrayprod[] = produit.toArray(new String[0]);
+		String stringArrayqte[] = qte.toArray(new String[0]);
+		List<String> tamp=new ArrayList<>();
+		for(int i=0,j=0;i<stringArrayqte.length;i++,j++) {
+			if(!(stringArrayqte[i].equals(""))) {
+				tamp.add(stringArrayqte[i]+"-"+stringArrayprod[j]);
+			}
+		}
+		FicheSortie fic=new FicheSortie();
+		fic=memoiremetier.findonefichesortie(idbon);
+		memoiremetier.savemodifFiche(tamp, fic, demandeappros);
+		List<DetailFiche> dtc=memoiremetier.detailbyfiche(fic.getId_fichesortie());
+		model.addAttribute("libelle", fic.getLibelle());
+		List<BonSortie> bonso=memoiremetier.bonbydetailfice(dtc);
+		model.addAttribute("bonsortie", dtc);
+		model.addAttribute("demandeappro",bonso.get(0).getDemandeappros().getTitre());
+		return "generationbonsortie";
+	}
+	@RequestMapping(value = "/modifiercommande")
+	public String modifiercommande(Model model,@RequestParam(name="produit")
+    List<String> produit,Long optionsListId, @RequestParam(name="qte")
+    List<String> qte,String titre,Long idbon,@RequestParam(name="iddetail") List<Long> iddetail) {
+		String stringArrayprod[] = produit.toArray(new String[0]);
+		String stringArrayqte[] = qte.toArray(new String[0]);
+		List<String> tamp=new ArrayList<>();
+		for(int i=0,j=0;i<stringArrayqte.length;i++,j++) {
+			if(!(stringArrayqte[i].equals(""))) {
+				tamp.add(stringArrayqte[i]+"-"+stringArrayprod[j]);
+			}
+		}
+		List<DetailCommande> dtc = memoiremetier.detailbycommande(idbon);
+		model.addAttribute("tamp", tamp);
+		//model.addAttribute("detailcommande", dtc);
+		model.addAttribute("produit", produit);
+		model.addAttribute("optionsListId", optionsListId);
+		model.addAttribute("qte", qte);
+		model.addAttribute("titre", titre);
+		model.addAttribute("idbon", idbon);
+		model.addAttribute("iddetail", iddetail);
+		memoiremetier.updatecommande(idbon, titre, optionsListId,tamp,iddetail);
+		BonCommande bnco=memoiremetier.findoneboncommande(idbon);
+		model.addAttribute("bonachat", bnco.getBondachats().getTitre());
+		model.addAttribute("detailcommande", dtc);
+		List<Produit> prodboubess=memoiremetier.listprodpourmodif(tamp);
+		model.addAttribute("listProduits",prodboubess);
+		return "modifierajoutcom";
+	}
+	@RequestMapping(value = "/modifiersortie")
+	public String modifiersortie(Model model,@RequestParam(name="produit")
+    List<String> produit,Long optionsListId,
+    @RequestParam(name="qte")
+    List<String> qte,String libelle,Long id_fiche,@RequestParam(name="iddetail") 
+	List<Long> iddetail) {
+		String stringArrayprod[] = produit.toArray(new String[0]);
+		String stringArrayqte[] = qte.toArray(new String[0]);
+		List<String> tamp=new ArrayList<>();
+		for(int i=0,j=0;i<stringArrayqte.length;i++,j++) {
+			if(!(stringArrayqte[i].equals(""))) {
+				tamp.add(stringArrayqte[i]+"-"+stringArrayprod[j]);
+			}
+		}
+		memoiremetier.updatefiche(id_fiche, libelle, optionsListId, tamp, iddetail);
+		FicheSortie bc=new FicheSortie();
+		bc=memoiremetier.findonefichesortie(id_fiche);
+		List<DetailFiche> dtc=memoiremetier.detailbyfiche(bc.getId_fichesortie());
+		model.addAttribute("libelle", bc.getLibelle());
+		List<BonSortie> bonso=memoiremetier.bonbydetailfice(dtc);
+		model.addAttribute("bonsortie", dtc);
+		model.addAttribute("id_fiche", id_fiche);
+		model.addAttribute("demandeappro",bonso.get(0).getDemandeappros().getTitre());
+		model.addAttribute("demandeappros",bonso.get(0).getDemandeappros().getId_demandeappro());
+		List<Produit> prodboubess=memoiremetier.listprodpourmodif(tamp);
+		model.addAttribute("listProduits",prodboubess);
+		return "modifierajoutfiche";
 	}
 	@RequestMapping(value = "/delecategorie")
 	public String delecategorie(Model model,@RequestParam(name="id_categorie") Long id_categorie) {
@@ -260,7 +674,7 @@ public class MemoireController {
 	public String modifierservice(Model model,@RequestParam(name="id_service") Long id_service,
 			@RequestParam(name="libelle") String libelle) {
 		memoiremetier.modifierservice(id_service, libelle);
-		return "redirect:/listservice";
+		return "redirect:listservice";
 	}
 	@RequestMapping(value = "/modifierproduit", method = RequestMethod.POST)
 	public String modifierproduit(Model model,@RequestParam(name="id_produit") Long id_produit,
@@ -297,6 +711,26 @@ public class MemoireController {
 		model.addAttribute("id_categorie",cat.getId_categorie());
 		return "modifiercategorie";
 	}
+	@RequestMapping(value="/findonefournisseurandmodif", method = RequestMethod.GET)
+	public String findonefournisseurandmodif(Model model,@RequestParam(name="id_fournisseur")Long id_fournisseur) {
+		Fournisseur four=memoiremetier.findonefournisseur(id_fournisseur);
+		model.addAttribute("cat",four);
+		model.addAttribute("adresse",four.getAdresse());
+		model.addAttribute("email",four.getEmail());
+		model.addAttribute("tel",four.getTel());
+		model.addAttribute("typefour",four.getClass().getSimpleName());
+		model.addAttribute("idfour",four.getId_fournisseur());
+		if(four.getClass().getSimpleName().equals("Entreprise")) {
+			Entreprise er=memoiremetier.findoneentreprise(id_fournisseur);
+			model.addAttribute("nomEntreprise",er.getNomEntreprise());
+		}else {
+			if(four.getClass().getSimpleName().equals("Personne")) {
+				Personne per=memoiremetier.findonepersonne(id_fournisseur);
+				model.addAttribute("nom",per.getNompersonne());
+			}
+		}
+		return "modifierfournisseur";
+	}
 	@RequestMapping(value="/findonedemandeachat", method = RequestMethod.GET)
 	public String findonedemandeachat(Model model,@RequestParam(name="id_doc")Long id_doc) {
 		DemandeAchat demach=new DemandeAchat();
@@ -305,7 +739,151 @@ public class MemoireController {
 		model.addAttribute("texte", demach.getTextedemande());
 		model.addAttribute("titre", demach.getTitre());
 		model.addAttribute("valide", demach.getValide());
+		model.addAttribute("id_demandeachat", demach.getIddoc());
 		return "demandeappro";
+	}
+	@RequestMapping(value="/findonedemandeappro", method = RequestMethod.GET)
+	public String findonedemandeappro(Model model,@RequestParam(name="id_demappro")Long id_demappro) {
+		DemandeAppro demach=new DemandeAppro();
+		demach=memoiremetier.findonedemandeappro(id_demappro);
+		model.addAttribute("demach", demach);
+		model.addAttribute("texte", demach.getTexte());
+		model.addAttribute("titre", demach.getTitre());
+		model.addAttribute("accorde", demach.getAccorde());
+		model.addAttribute("id_demandeappro", demach.getId_demandeappro());
+		String accord="Accordé";
+		String nonaccord="Non Accordé";
+		String accordpar="Accordé Partiellement";
+		model.addAttribute("accord",accord );
+		model.addAttribute("nonaccord",nonaccord );
+		model.addAttribute("accordpar",accordpar );
+		return "verifdemande";
+	}
+	@RequestMapping(value="/findonebondachat", method = RequestMethod.GET)
+	public String findonebondachat(Model model,@RequestParam(name="id_bondachat")Long id_bondachat) {
+		BonDachat bonach=new BonDachat();
+		bonach=memoiremetier.findonebonachat(id_bondachat);
+		model.addAttribute("bonach", bonach);
+		model.addAttribute("texte", bonach.getTexte());
+		model.addAttribute("titre", bonach.getTitre());
+		model.addAttribute("valide", bonach.getValide());
+		model.addAttribute("id_bondachat", bonach.getId_bondachat());
+		return "verifbon";
+	}
+	@RequestMapping(value="/findoneboncommande", method = RequestMethod.GET)
+	public String findoneboncommande(Model model,@RequestParam(name="id_boncommande")Long id_boncommande) {
+		BonCommande bonach=new BonCommande();
+		bonach=memoiremetier.findoneboncommande(id_boncommande);
+		model.addAttribute("bonach", bonach);
+		model.addAttribute("titre", bonach.getTitre());
+		model.addAttribute("titrebonachat", bonach.getBondachats().getTitre());
+		List<DetailCommande> dtcom=memoiremetier.detailbycommande(bonach.getId_boncommande());
+		model.addAttribute("detailcom", dtcom);
+		return "voircommande";
+	}
+	@RequestMapping(value="/findonebonlivraison", method = RequestMethod.GET)
+	public String findonebonlivraison(Model model,@RequestParam(name="id_bonlivraison")Long id_bonlivraison) {
+		BonLivraison bc=new BonLivraison();
+		bc=memoiremetier.findonelivraison(id_bonlivraison);
+		List<DetailLivraison> dtc=memoiremetier.detailbyLivraison(bc.getId_bonlivraison());
+		model.addAttribute("titre", bc.getTitre());
+		model.addAttribute("boncommande", bc.getBoncommandes().getTitre());
+		model.addAttribute("fournisseur", bc.getFournisseurs().getNom());
+		model.addAttribute("detailcommande", dtc);
+		return "voirlivraison";
+	}
+	@RequestMapping(value="/findonebonsortie", method = RequestMethod.GET)
+	public String findonebonsortie(Model model,@RequestParam(name="id_fichesortie")Long id_fichesortie) {
+		FicheSortie ficsort=new FicheSortie();
+		ficsort=memoiremetier.findonefichesortie(id_fichesortie);
+		model.addAttribute("ficsort", ficsort);
+		List<DetailFiche> dtc=memoiremetier.detailbyfiche(ficsort.getId_fichesortie());
+		model.addAttribute("libelle", ficsort.getLibelle());
+		List<BonSortie> bonso=memoiremetier.bonbydetailfice(dtc);
+		model.addAttribute("bonsortie", dtc);
+		model.addAttribute("demandeappro",bonso.get(0).getDemandeappros().getTitre());
+		return "voirbonsortie";
+	}
+	@RequestMapping(value="/findoneboncommandeandsuppr", method = RequestMethod.GET)
+	public String findoneboncommandeandsuppr(Model model,@RequestParam(name="id_boncommande")Long id_boncommande) {
+		
+		memoiremetier.supprcommande(id_boncommande);
+		return "redirect:historiquebonacommande";
+	}
+	@RequestMapping(value="/findonebonlivandsuppr", method = RequestMethod.GET)
+	public String findonebonlivandsuppr(Model model,@RequestParam(name="id_bonlivraison")Long id_bonlivraison) {
+		
+		memoiremetier.deletelivraison(id_bonlivraison);
+		return "redirect:historiquebonlivraison";
+	}
+	 @RequestMapping("/historiquebonsortie")
+		public String historiquebonsortie(Model model, @RequestParam(name = "page", defaultValue = "0") int page,
+				@RequestParam(name = "size", defaultValue = "5") int size) {
+			try {
+				Page<FicheSortie> pageFichSortie=memoiremetier.listfiche(page, size);
+				model.addAttribute("listfichesor", pageFichSortie.getContent());
+				int [] pages=new int [pageFichSortie.getTotalPages()];
+				model.addAttribute("pages",pages);
+			} catch (Exception e) {
+				// TODO: handle exception
+				model.addAttribute("exception", e);
+			}
+			return "historiquebonsortie";
+		}
+	@RequestMapping(value="/findonebonsortieandsuppr", method = RequestMethod.GET)
+	public String findonebonsortieandsuppr(Model model,@RequestParam(name="id_fichesortie")Long id_fichesortie) {
+		
+		memoiremetier.supprbonsortie(id_fichesortie);
+		return "redirect:historiquebonsortie";
+	}
+	@RequestMapping(value="/findonedetailandsupprr", method = RequestMethod.GET)
+	public String findonedetailandsupprr(Model model,@RequestParam(name="id_detail")Long id_detail,
+			@RequestParam(name="idcommande")Long idcommande) {
+		
+		memoiremetier.supprdetailcommande(id_detail);
+		return "redirect:findoneboncommandeandmodif?id_boncommande="+idcommande;
+	}
+	@RequestMapping(value="/findonedetailsortandsupprr", method = RequestMethod.GET)
+	public String findonedetailsortandsupprr(Model model,@RequestParam(name="id_detail")Long id_detail,
+			@RequestParam(name="id_fiche")Long id_fiche) {
+		
+		memoiremetier.supprdetailfiche(id_detail);
+		return "redirect:findonebonsortieandmodif?id_fichesortie="+id_fiche;
+	}
+	@RequestMapping(value="/findoneboncommandeandmodif", method = RequestMethod.GET)
+	public String findoneboncommandeandmodif(Model model,@RequestParam(name="id_boncommande")Long id_boncommande) {
+		BonCommande bonach=new BonCommande();
+		bonach=memoiremetier.findoneboncommande(id_boncommande);
+		model.addAttribute("bonach", bonach);
+		model.addAttribute("titre", bonach.getTitre());
+		model.addAttribute("idbon", bonach.getId_boncommande());
+		model.addAttribute("bonachat", bonach.getBondachats().getId_bondachat());
+		model.addAttribute("codebonachat", bonach.getBondachats().getCode_bon());
+		List<DetailCommande> dtcom=memoiremetier.detailbycommande(bonach.getId_boncommande());
+		model.addAttribute("detailcom", dtcom);
+		List<BonDachat> lisach=memoiremetier.allbondachat();
+		model.addAttribute("lisach", lisach);
+		return "modifcommande";
+	}
+	@RequestMapping(value="/findonebonsortieandmodif", method = RequestMethod.GET)
+	public String findonebonsortieandmodif(Model model,@RequestParam(name="id_fichesortie")Long id_fichesortie) {
+		FicheSortie ficsort=new FicheSortie();
+		ficsort=memoiremetier.findonefichesortie(id_fichesortie);
+		model.addAttribute("ficsort", ficsort);
+		List<DetailFiche> dtc=memoiremetier.detailbyfiche(ficsort.getId_fichesortie());
+		model.addAttribute("libelle", ficsort.getLibelle());
+		model.addAttribute("id_fiche", ficsort.getId_fichesortie());
+		List<BonSortie> bonso=memoiremetier.bonbydetailfice(dtc);
+		model.addAttribute("bonsortie", dtc);
+		model.addAttribute("demandeappro",bonso.get(0).getDemandeappros().getTitre());
+		List<DemandeAppro> listappro=memoiremetier.listappro();
+		model.addAttribute("listappro",listappro);
+		return "modifsortie";
+	}
+	@RequestMapping(value="/validerbonachat", method = RequestMethod.POST)
+	public String validerbonachat(Model model,@RequestParam(name="id_bondachat")Long id_bondachat) {
+		memoiremetier.validerbonachat(id_bondachat);
+		return "verifbon";
 	}
 	@RequestMapping(value="/findoneservice", method = RequestMethod.GET)
 	public String findoneservice(Model model,@RequestParam(name="id_service")Long id_service) {

@@ -1,6 +1,7 @@
 package org.sid.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,6 +21,8 @@ public class DetailLivraison implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="id_bonlivraison")
 	private BonLivraison bonlivraisons;
+	private int etat;
+	private Date date;
 	public DetailLivraison() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -30,6 +33,19 @@ public class DetailLivraison implements Serializable {
 		this.qte = qte;
 		this.produits = produits;
 		this.bonlivraisons = bonlivraisons;
+	}
+	
+	public int getEtat() {
+		return etat;
+	}
+	public void setEtat(int etat) {
+		this.etat = etat;
+	}
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
 	}
 	public Long getId_detaillivraison() {
 		return id_detaillivraison;

@@ -26,6 +26,8 @@ public class BonLivraison implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="id_fournisseur")
 	private Fournisseur fournisseurs;
+	private int etat;
+	private String titre;
 	public BonLivraison() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -36,6 +38,18 @@ public class BonLivraison implements Serializable {
 		this.date = date;
 	}
 	
+	public String getTitre() {
+		return titre;
+	}
+	public void setTitre(String titre) {
+		this.titre = titre;
+	}
+	public int getEtat() {
+		return etat;
+	}
+	public void setEtat(int etat) {
+		this.etat = etat;
+	}
 	public BonLivraison(String code_bonlivraison, Date date, BonCommande boncommandes, Fournisseur fournisseurs) {
 		super();
 		this.code_bonlivraison = code_bonlivraison;

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,10 +9,15 @@
 	content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina" />
 
 <title>DASHGUM - Bootstrap Admin Template</title>
+
 <!-- Bootstrap core CSS -->
 <link href="assets/css/bootstrap.css" rel="stylesheet" />
 <!--external css-->
 <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css"
+	href="assets/js/bootstrap-datepicker/css/datepicker.css" />
+<link rel="stylesheet" type="text/css"
+	href="assets/js/bootstrap-daterangepicker/daterangepicker.css" />
 
 <!-- Custom styles for this template -->
 <link href="assets/css/style.css" rel="stylesheet" />
@@ -193,19 +198,20 @@
 							<li><a href="gallery.html">Gallery</a></li>
 							<li><a href="todo_list.html">Todo List</a></li>
 						</ul></li>
-					<li class="sub-menu"><a class="active" href="javascript:;">
-							<i class="fa fa-book"></i> <span>Extra Pages</span>
+					<li class="sub-menu"><a href="javascript:;"> <i
+							class="fa fa-book"></i> <span>Extra Pages</span>
 					</a>
 						<ul class="sub">
-							<li class="active"><a href="blank.html">Blank Page</a></li>
+							<li><a href="blank.html">Blank Page</a></li>
 							<li><a href="login.html">Login</a></li>
 							<li><a href="lock_screen.html">Lock Screen</a></li>
 						</ul></li>
-					<li class="sub-menu"><a href="javascript:;"> <i
-							class="fa fa-tasks"></i> <span>Forms</span>
+					<li class="sub-menu"><a class="active" href="javascript:;">
+							<i class="fa fa-tasks"></i> <span>Forms</span>
 					</a>
 						<ul class="sub">
-							<li><a href="form_component.html">Form Components</a></li>
+							<li class="active"><a href="form_component.html">Ajout
+									Produit</a></li>
 						</ul></li>
 					<li class="sub-menu"><a href="javascript:;"> <i
 							class="fa fa-th"></i> <span>Data Tables</span>
@@ -233,51 +239,57 @@
       *********************************************************************************************************************************************************** -->
 		<!--main content start-->
 		<section id="main-content">
-			<section class="wrapper site-min-height">
+			<section class="wrapper">
 				<h3>
-					<i class="fa fa-angle-right"></i> Blank Page
+					<i class="fa fa-angle-right"></i>Bon de Commande
 				</h3>
-				<form method="POST" th:action="@{/upload}" enctype="multipart/form-data">
-				<div class="col-md-6">
-					 <fieldset>
-                <legend>Envoi de fichier</legend>
-					<input type="file" name="file" /><br />
-					</fieldset>
-				</div>
-				<div class="col-md-6">
+				<div class="row mt">
+					<div class="col-lg-12">
+						<div class="form-panel">
+							<h4 class="mb">
+								<i class="fa fa-angle-right"></i>Bon de Commande
+							</h4>
+							<form class="form-horizontal style-form" method="post" th:action="@{/generationcommande}">
+								<div class="form-group">
+									<label class="col-sm-2 col-sm-2 control-label">Titre
+										de la Commande</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" name="titre" 
+										th:value="${titre}" disabled="true" />
+									</div>
+								</div>
+								<br></br> <br></br> <br></br>
+								<div class="col-md-6">
+									 <label class="col-sm-2 col-sm-2 control-label">Bon D'achat
+									</label> 
+									<input type="text" class="form-control" name="bonachat" 
+									th:value="${titrebonachat}" disabled="true"
+									/>
+								</div>
+									<div class="col-md-12">
 				     <table class="table table-striped table-advance table-hover">
-	                  	  	  <h4><i class="fa fa-angle-right"></i> Gestion Des droits</h4>
+	                  	  	  <h4><i class="fa fa-angle-right"></i></h4>
                               <thead>
-                            <tr>
-							<th>Utilisateur</th>
-						</tr>
+                            <tr></tr>
                               </thead>
                                   <tbody>
-                              <tr th:each="c:${listuser}">
-							<td th:text="${c.prenom_user}+ ' ' + ${c.nom_user}"></td>
-							<tr>
-							<th:block th:each="list : ${listdroit}">
-							<td><input type="checkbox" name="option" th:name="idChecked" 
-							th:value="|${c.id_user}-${list.iddroit}|" th:text="${list.libelle}"/></td>
-							</th:block>
+                              <tr th:each="c:${detailcom}">
+							<td th:text="|Produit: ${c.getProduits().getLibelle()}|"></td>
+							<td>Quantité: <input type="text" name="qte" th:value="${c.qte}" disabled="true"/>
+							</td>
 							</tr>
-						</tr>
                               </tbody>
                               
                           </table>
-                               	<div class="container">
-						<ul class="nav nav-pills">
-							<li th:each="p,status:${pages}"><a
-								th:href="@{/creationdocument(page=${status.index})}"
-								th:text="${status.index}"></a></li>
-						</ul>
+				</div>
+								 <br></br> <br></br> <br></br>
+								<button type="submit" class="btn btn-primary">Valider</button>
+							</form>
+						</div>
 					</div>
+					<!-- col-lg-12-->
 				</div>
-				<div class="col-md-6" align="center">
-				<br /> <input type="submit" value="Enregistrer" />
-				</div>
-				</form>
-
+				<!-- /row -->
 			</section>
 		</section>
 		<!-- /MAIN CONTENT -->
@@ -297,8 +309,6 @@
 	<!-- js placed at the end of the document so the pages load faster -->
 	<script src="assets/js/jquery.js"></script>
 	<script src="assets/js/bootstrap.min.js"></script>
-	<script src="assets/js/jquery-ui-1.9.2.custom.min.js"></script>
-	<script src="assets/js/jquery.ui.touch-punch.min.js"></script>
 	<script class="include" type="text/javascript"
 		src="assets/js/jquery.dcjqaccordion.2.7.js"></script>
 	<script src="assets/js/jquery.scrollTo.min.js"></script>
@@ -309,6 +319,29 @@
 	<script src="assets/js/common-scripts.js"></script>
 
 	<!--script for this page-->
+	<script src="assets/js/jquery-ui-1.9.2.custom.min.js"></script>
+
+	<!--custom switch-->
+	<script src="assets/js/bootstrap-switch.js"></script>
+
+	<!--custom tagsinput-->
+	<script src="assets/js/jquery.tagsinput.js"></script>
+
+	<!--custom checkbox & radio-->
+
+	<script type="text/javascript"
+		src="assets/js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+	<script type="text/javascript"
+		src="assets/js/bootstrap-daterangepicker/date.js"></script>
+	<script type="text/javascript"
+		src="assets/js/bootstrap-daterangepicker/daterangepicker.js"></script>
+
+	<script type="text/javascript"
+		src="assets/js/bootstrap-inputmask/bootstrap-inputmask.min.js"></script>
+
+
+	<script src="assets/js/form-component.js"></script>
+
 
 	<script>
       //custom select box

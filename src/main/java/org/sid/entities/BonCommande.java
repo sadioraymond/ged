@@ -30,9 +30,44 @@ public class BonCommande implements Serializable{
 	@ManyToOne
 	@JoinColumn(name="id_bondachat")
 	private BonDachat bondachats;
+	private String titre;
+	private int etat;
 	public Long getId_boncommande() {
 		return id_boncommande;
 	}
+	
+	public int getEtat() {
+		return etat;
+	}
+
+	public void setEtat(int etat) {
+		this.etat = etat;
+	}
+
+	public Collection<BonLivraison> getBonlivraisons() {
+		return bonlivraisons;
+	}
+
+	public void setBonlivraisons(Collection<BonLivraison> bonlivraisons) {
+		this.bonlivraisons = bonlivraisons;
+	}
+
+	public BonDachat getBondachats() {
+		return bondachats;
+	}
+
+	public void setBondachats(BonDachat bondachats) {
+		this.bondachats = bondachats;
+	}
+
+	public String getTitre() {
+		return titre;
+	}
+
+	public void setTitre(String titre) {
+		this.titre = titre;
+	}
+
 	public void setId_boncommande(Long id_boncommande) {
 		this.id_boncommande = id_boncommande;
 	}

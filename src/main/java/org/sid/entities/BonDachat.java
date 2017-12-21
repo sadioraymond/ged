@@ -27,9 +27,28 @@ public class BonDachat implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="id_demandeappro")
 	private DemandeAppro demandeappros;
+	private String titre;
+	private Boolean valide;
 	public Long getId_bondachat() {
 		return id_bondachat;
 	}
+	
+	public Boolean getValide() {
+		return valide;
+	}
+
+	public void setValide(Boolean valide) {
+		this.valide = valide;
+	}
+
+	public String getTitre() {
+		return titre;
+	}
+
+	public void setTitre(String titre) {
+		this.titre = titre;
+	}
+
 	public void setId_bondachat(Long id_bondachat) {
 		this.id_bondachat = id_bondachat;
 	}
