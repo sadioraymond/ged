@@ -269,6 +269,15 @@
 										></option>	
 								</select>
 								</div>
+									<div class="col-md-6">
+									 <label class="col-sm-2 col-sm-2 control-label">Fournisseur
+									</label> 
+									<select id="optionsLists" name="optionsListIds">
+									<option th:each="vars : ${fou}" th:value="${vars.id_fournisseur}"
+										th:text="|${vars.code_fournisseur}---${vars.class.simpleName}|">
+										</option>	
+								</select>
+								</div>
 									<div class="col-md-12">
 				     <table class="table table-striped table-advance table-hover">
 	                  	  	  <h4><i class="fa fa-angle-right"></i></h4>

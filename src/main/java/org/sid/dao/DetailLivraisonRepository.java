@@ -10,4 +10,6 @@ import org.springframework.data.repository.query.Param;
 public interface DetailLivraisonRepository extends JpaRepository<DetailLivraison, Long>{
 	@Query(nativeQuery = true,value="select * from detail_livraison where id_bonlivraison=:x and etat=1")
 	public List<DetailLivraison> detailbyLivraison(@Param("x")Long id_bon);
+	@Query(nativeQuery = true,value="select * from detail_livraison where id_detaillivraison=:x and etat=1 limit 1")
+	public DetailLivraison findonedetaillivraison(@Param("x")Long id_detail);
 }

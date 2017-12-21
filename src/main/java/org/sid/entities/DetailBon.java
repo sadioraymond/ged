@@ -20,6 +20,7 @@ public class DetailBon implements Serializable {
 	@JoinColumn(name="id_fournisseur")
 	private Fournisseur fournisseurs;
 	private Date date;
+	private int etat;
 	public DetailBon() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -35,6 +36,13 @@ public class DetailBon implements Serializable {
 	}
 	public void setId_detail(Long id_detail) {
 		this.id_detail = id_detail;
+	}
+	
+	public int getEtat() {
+		return etat;
+	}
+	public void setEtat(int etat) {
+		this.etat = etat;
 	}
 	public BonCommande getBoncommandes() {
 		return boncommandes;

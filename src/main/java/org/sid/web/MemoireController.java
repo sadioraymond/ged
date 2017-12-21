@@ -29,6 +29,7 @@ import org.sid.entities.BonSortie;
 import org.sid.entities.Categorie;
 import org.sid.entities.DemandeAchat;
 import org.sid.entities.DemandeAppro;
+import org.sid.entities.DetailBon;
 import org.sid.entities.DetailCommande;
 import org.sid.entities.DetailFiche;
 import org.sid.entities.DetailLivraison;
@@ -456,8 +457,10 @@ public class MemoireController {
 			@RequestParam(name = "size", defaultValue = "30") int size) {
 		List<BonDachat> bon=null;
 		bon=memoiremetier.allbondachat();
+		List<Fournisseur> listfour=memoiremetier.allFournisseurs();
 		String Produit="Produit";
 		Page<Produit> pageProduits = memoiremetier.listProduit(page, size);
+		model.addAttribute("listfour", listfour);
 		model.addAttribute("listebon", bon);
 		model.addAttribute("listProduits", pageProduits.getContent());
 		model.addAttribute("Produit", Produit);
@@ -495,7 +498,7 @@ public class MemoireController {
 	}
 	@RequestMapping(value = "/saveBonCommande")
 	public String saveBonCommande(Model model,@RequestParam(name="produit")
-    List<String> produit,Long optionsListId, @RequestParam(name="qte")
+    List<String> produit,Long optionsListId,Long optionsListIds, @RequestParam(name="qte")
     List<String> qte,String titre) {
 		String stringArrayprod[] = produit.toArray(new String[0]);
 		String stringArrayqte[] = qte.toArray(new String[0]);
@@ -505,10 +508,13 @@ public class MemoireController {
 				tamp.add(stringArrayqte[i]+"-"+stringArrayprod[j]);
 			}
 		}
-		memoiremetier.savecommande(tamp, titre, optionsListId);
+		memoiremetier.savecommande(tamp, titre, optionsListId,optionsListIds);
 		BonCommande bc=new BonCommande();
 		bc=memoiremetier.dernierbon();
 		List<DetailCommande> dtc=memoiremetier.detailbycommande(bc.getId_boncommande());
+		DetailBon detbon=new DetailBon();
+		detbon=memoiremetier.detailbyboncommande(bc.getId_boncommande());
+		model.addAttribute("fournisseur", detbon.getFournisseurs().getNom());
 		model.addAttribute("titre", bc.getTitre());
 		model.addAttribute("bonachat", bc.getBondachats().getTitre());
 		model.addAttribute("detailcommande", dtc);
@@ -575,10 +581,35 @@ public class MemoireController {
 		bc=memoiremetier.findoneboncommande(idbon);
 		memoiremetier.savemodifcommande(tamp, bc);
 		List<DetailCommande> dtc=memoiremetier.detailbycommande(bc.getId_boncommande());
+		DetailBon detbon=memoiremetier.detailbyboncommande(bc.getId_boncommande());
+		model.addAttribute("fournisseur", detbon.getFournisseurs().getNom());
 		model.addAttribute("titre", bc.getTitre());
 		model.addAttribute("bonachat", bc.getBondachats().getTitre());
 		model.addAttribute("detailcommande", dtc);
 		return "generationcommande";
+	}
+	@RequestMapping(value = "/saveLivraisons")
+	public String saveLivraisons(Model model,@RequestParam(name="produit")
+    List<String> produit,@RequestParam(name="qte")List<String> qte,
+    @RequestParam(name="idbon")Long idbon,@RequestParam(name="prix")List<String> prix) {
+		String stringArrayprod[] = produit.toArray(new String[0]);
+		String stringArrayqte[] = qte.toArray(new String[0]);
+		String stringArrayprix[] = prix.toArray(new String[0]);
+		List<String> tamp=new ArrayList<>();
+		for(int i=0,j=0,k=0;i<stringArrayqte.length;i++,j++,k++) {
+			if(!(stringArrayqte[i].equals(""))) {
+				tamp.add(stringArrayqte[i]+"-"+stringArrayprod[j]+"-"+stringArrayprix[k]);
+			}
+		}
+		BonLivraison bl=new BonLivraison();
+		bl=memoiremetier.findonelivraison(idbon);
+		memoiremetier.savemodiflivraison(tamp, bl);
+		List<DetailLivraison> dtc=memoiremetier.detailbyLivraison(bl.getId_bonlivraison());
+		model.addAttribute("titre", bl.getTitre());
+		model.addAttribute("boncommande", bl.getBoncommandes().getTitre());
+		model.addAttribute("fournisseur", bl.getFournisseurs().getNom());
+		model.addAttribute("detailcommande", dtc);
+		return "generationlivraison";
 	}
 	@RequestMapping(value = "/saveFiches")
 	public String saveFiches(Model model,@RequestParam(name="produit")
@@ -604,7 +635,7 @@ public class MemoireController {
 	}
 	@RequestMapping(value = "/modifiercommande")
 	public String modifiercommande(Model model,@RequestParam(name="produit")
-    List<String> produit,Long optionsListId, @RequestParam(name="qte")
+    List<String> produit,Long optionsListId,Long optionsListIds, @RequestParam(name="qte")
     List<String> qte,String titre,Long idbon,@RequestParam(name="iddetail") List<Long> iddetail) {
 		String stringArrayprod[] = produit.toArray(new String[0]);
 		String stringArrayqte[] = qte.toArray(new String[0]);
@@ -623,13 +654,42 @@ public class MemoireController {
 		model.addAttribute("titre", titre);
 		model.addAttribute("idbon", idbon);
 		model.addAttribute("iddetail", iddetail);
-		memoiremetier.updatecommande(idbon, titre, optionsListId,tamp,iddetail);
+		memoiremetier.updatecommande(idbon, titre, optionsListId,tamp,iddetail,optionsListIds);
 		BonCommande bnco=memoiremetier.findoneboncommande(idbon);
+		DetailBon detbon=memoiremetier.detailbyboncommande(bnco.getId_boncommande());
+		model.addAttribute("fournisseur", detbon.getFournisseurs().getNom());
 		model.addAttribute("bonachat", bnco.getBondachats().getTitre());
 		model.addAttribute("detailcommande", dtc);
 		List<Produit> prodboubess=memoiremetier.listprodpourmodif(tamp);
 		model.addAttribute("listProduits",prodboubess);
 		return "modifierajoutcom";
+	}
+	@RequestMapping(value = "/modifierlivraison")
+	public String modifierlivraison(Model model,@RequestParam(name="produit")
+    List<String> produit,Long optionsListId,Long optionsListIds, @RequestParam(name="qte")
+    List<String> qte,String titre,Long idbon,@RequestParam(name="iddetail") List<Long> iddetail,
+    @RequestParam(name="prix")List<String> prix) {
+		String stringArrayprod[] = produit.toArray(new String[0]);
+		String stringArrayqte[] = qte.toArray(new String[0]);
+		String stringArrayprix[] = prix.toArray(new String[0]);
+		List<String> tamp=new ArrayList<>();
+		for(int i=0,j=0,k=0;i<stringArrayqte.length;i++,j++,k++) {
+			if(!(stringArrayqte[i].equals(""))) {
+				tamp.add(stringArrayqte[i]+"-"+stringArrayprod[j]+"-"+stringArrayprix[k]);
+			}
+		}
+		memoiremetier.updatelivraison(idbon, tamp, titre, optionsListId, optionsListIds, iddetail);
+		BonLivraison bc=new BonLivraison();
+		bc=memoiremetier.findonelivraison(idbon);
+		List<DetailLivraison> dtc=memoiremetier.detailbyLivraison(bc.getId_bonlivraison());
+		model.addAttribute("titre", bc.getTitre());
+		model.addAttribute("idbon", bc.getId_bonlivraison());
+		model.addAttribute("boncommande", bc.getBoncommandes().getTitre());
+		model.addAttribute("fournisseur", bc.getFournisseurs().getNom());
+		model.addAttribute("detailcommande", dtc);
+		List<Produit> prodboubess=memoiremetier.listprodpourmodif(tamp);
+		model.addAttribute("listProduits",prodboubess);
+		return "modifierajoutliv";
 	}
 	@RequestMapping(value = "/modifiersortie")
 	public String modifiersortie(Model model,@RequestParam(name="produit")
@@ -774,6 +834,9 @@ public class MemoireController {
 	public String findoneboncommande(Model model,@RequestParam(name="id_boncommande")Long id_boncommande) {
 		BonCommande bonach=new BonCommande();
 		bonach=memoiremetier.findoneboncommande(id_boncommande);
+		DetailBon detbon=new DetailBon();
+		detbon=memoiremetier.detailbyboncommande(bonach.getId_boncommande());
+		model.addAttribute("fournisseur", detbon.getFournisseurs().getNom());
 		model.addAttribute("bonach", bonach);
 		model.addAttribute("titre", bonach.getTitre());
 		model.addAttribute("titrebonachat", bonach.getBondachats().getTitre());
@@ -843,6 +906,13 @@ public class MemoireController {
 		memoiremetier.supprdetailcommande(id_detail);
 		return "redirect:findoneboncommandeandmodif?id_boncommande="+idcommande;
 	}
+	@RequestMapping(value="/findonedetaillivandsupprr", method = RequestMethod.GET)
+	public String findonedetaillivandsupprr(Model model,@RequestParam(name="id_detail")Long id_detail,
+			@RequestParam(name="id_bonlivraison")Long idbon) {
+		
+		memoiremetier.deletedetailliv(id_detail);
+		return "redirect:findonebonlivandmodif?id_bonlivraison="+idbon;
+	}
 	@RequestMapping(value="/findonedetailsortandsupprr", method = RequestMethod.GET)
 	public String findonedetailsortandsupprr(Model model,@RequestParam(name="id_detail")Long id_detail,
 			@RequestParam(name="id_fiche")Long id_fiche) {
@@ -856,6 +926,8 @@ public class MemoireController {
 		bonach=memoiremetier.findoneboncommande(id_boncommande);
 		model.addAttribute("bonach", bonach);
 		model.addAttribute("titre", bonach.getTitre());
+		List<Fournisseur> fou=memoiremetier.allFournisseurs();
+		model.addAttribute("fou", fou);
 		model.addAttribute("idbon", bonach.getId_boncommande());
 		model.addAttribute("bonachat", bonach.getBondachats().getId_bondachat());
 		model.addAttribute("codebonachat", bonach.getBondachats().getCode_bon());
@@ -864,6 +936,22 @@ public class MemoireController {
 		List<BonDachat> lisach=memoiremetier.allbondachat();
 		model.addAttribute("lisach", lisach);
 		return "modifcommande";
+	}
+	@RequestMapping(value="/findonebonlivandmodif", method = RequestMethod.GET)
+	public String findonebonlivandmodif(Model model,@RequestParam(name="id_bonlivraison")Long id_bonlivraison) {
+		BonLivraison bc=new BonLivraison();
+		bc=memoiremetier.findonelivraison(id_bonlivraison);
+		List<DetailLivraison> dtc=memoiremetier.detailbyLivraison(bc.getId_bonlivraison());
+		model.addAttribute("titre", bc.getTitre());
+		model.addAttribute("idbon", bc.getId_bonlivraison());
+		model.addAttribute("boncommande", bc.getBoncommandes().getTitre());
+		model.addAttribute("fournisseur", bc.getFournisseurs().getNom());
+		model.addAttribute("detailcommande", dtc);
+		List<BonCommande> listbon=memoiremetier.allCommandes();
+		List<Fournisseur> listfour=memoiremetier.allFournisseurs();
+		model.addAttribute("listbon", listbon);
+		model.addAttribute("listfour", listfour);
+		return "modiflivraison";
 	}
 	@RequestMapping(value="/findonebonsortieandmodif", method = RequestMethod.GET)
 	public String findonebonsortieandmodif(Model model,@RequestParam(name="id_fichesortie")Long id_fichesortie) {

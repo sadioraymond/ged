@@ -11,6 +11,7 @@ import org.sid.entities.BonSortie;
 import org.sid.entities.Categorie;
 import org.sid.entities.DemandeAchat;
 import org.sid.entities.DemandeAppro;
+import org.sid.entities.DetailBon;
 import org.sid.entities.DetailCommande;
 import org.sid.entities.DetailFiche;
 import org.sid.entities.DetailLivraison;
@@ -70,7 +71,7 @@ public interface MemoireMetier {
 	public void validerbonachat(Long id_bonachat);
 	public List<BonDachat> allbondachat();
 	public List<Produit> allproduit();
-	public void savecommande(List<String> tamp,String titre,Long id_bondachat);
+	public void savecommande(List<String> tamp,String titre,Long id_bondachat,Long optionsListIds);
 	public BonCommande dernierbon();
 	public List<DetailCommande> detailbycommande(Long id_bon);
 	public Page<BonCommande> listBonCommande(int page,int size);
@@ -78,7 +79,7 @@ public interface MemoireMetier {
 	public BonCommande findoneboncommande(Long id_boncommande);
 	public void supprcommande(Long id_boncommande);
 	public void supprdetailcommande(Long id_detailcommande);
-	public void updatecommande(Long id_commande,String titre, Long id_bondachat,List<String> tamp,List<Long> iddetail);
+	public void updatecommande(Long id_commande,String titre, Long id_bondachat,List<String> tamp,List<Long> iddetail,Long id_fournisseur);
 	public List<Produit> listprodpourmodif(List<String> listbi);
 	public void savemodifcommande(List<String> tamp,BonCommande bcom);
 	public List<DemandeAppro> listappro();
@@ -116,4 +117,9 @@ public interface MemoireMetier {
 	public Page<BonLivraison> listBonLivraison(int page,int size);
 	public BonLivraison findonelivraison(Long id_bonlivraison);
 	public void deletelivraison(Long id_bonliv);
+	public void deletedetailliv(Long id_detail);
+	public DetailLivraison findonedetaillivraison(Long id_detail);
+	public void updatelivraison(Long idbon,List<String> tamp,String titre,Long id_boncommande,Long id_fourni,List<Long> iddetail);
+	public void savemodiflivraison(List<String> tamp,BonLivraison bliv);
+	public DetailBon detailbyboncommande(Long id_bon);
 }

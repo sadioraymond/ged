@@ -33,6 +33,7 @@ import org.sid.entities.BonSortie;
 import org.sid.entities.Categorie;
 import org.sid.entities.DemandeAchat;
 import org.sid.entities.DemandeAppro;
+import org.sid.entities.DetailBon;
 import org.sid.entities.DetailCommande;
 import org.sid.entities.DetailFiche;
 import org.sid.entities.DetailLivraison;
@@ -96,6 +97,8 @@ public class MemoireMetierImpl implements MemoireMetier{
 	private BonLivraisonRepository blrepo;
 	@Autowired
 	private DetailLivraisonRepository detlivrepo;
+	@Autowired
+	private DetailBonRepository detbonrepo;
 	@Override
 	public void savecategorie(String libelle) {
 		Long nbr=categorierepository.count()+1;
@@ -427,7 +430,7 @@ public class MemoireMetierImpl implements MemoireMetier{
 		return cat;
 	}
 	@Override
-	public void savecommande(List<String> tamp, String titre, Long id_bondachat) {
+	public void savecommande(List<String> tamp, String titre, Long id_bondachat,Long optionsListIds) {
 		// TODO Auto-generated method stub
 		BonCommande boncom=new BonCommande();
 		boncom.setTitre(titre);
@@ -438,9 +441,17 @@ public class MemoireMetierImpl implements MemoireMetier{
 		Long nbr=boncomrepo.count()+1;
 		String code_bon="Bon"+nbr;
 		boncom.setCodebon(code_bon);
+		boncom.setEtat(1);
 		boncomrepo.save(boncom);
 		BonCommande bcom=new BonCommande();
 		bcom=dernierbon();
+		Fournisseur fou=findonefournisseur(optionsListIds);
+		DetailBon detbon=new DetailBon();
+		detbon.setBoncommandes(bcom);
+		detbon.setDate(new Date());
+		detbon.setEtat(1);
+		detbon.setFournisseurs(fou);
+		detbonrepo.save(detbon);
 		for (String string : tamp) {
 			String[] parts = string.split("-");
 			String part1 = parts[0];
@@ -499,7 +510,7 @@ public class MemoireMetierImpl implements MemoireMetier{
 	}
 	@Override
 	public void updatecommande(Long id_commande, String titre, Long id_bondachat,
-			List<String> tamp,List<Long> iddetail) {
+			List<String> tamp,List<Long> iddetail,Long id_fournisseur) {
 		// TODO Auto-generated method stub
 		BonCommande bncom=new BonCommande();
 		bncom=findoneboncommande(id_commande);
@@ -508,6 +519,13 @@ public class MemoireMetierImpl implements MemoireMetier{
 		bnach=findonebonachat(id_bondachat);
 		bncom.setBondachats(bnach);
 		boncomrepo.save(bncom);
+		Fournisseur fou=findonefournisseur(id_fournisseur);
+		DetailBon detbon=new DetailBon();
+		detbon.setBoncommandes(bncom);
+		detbon.setDate(new Date());
+		detbon.setEtat(1);
+		detbon.setFournisseurs(fou);
+		detbonrepo.save(detbon);
 		Long iddet[] = iddetail.toArray(new Long[0]);
 		int i=0;
 		for (String string : tamp) {
@@ -674,9 +692,6 @@ public class MemoireMetierImpl implements MemoireMetier{
 	public void updatefiche(Long id_fiche, String libelle, Long id_demandeapprot, List<String> tamp,
 			List<Long> iddetail) {
 		// TODO Auto-generated method stub
-		if(id_demandeapprot==null) {
-			throw new RuntimeException("demande appro null");
-		}
 		FicheSortie ficsor=new FicheSortie();
 		ficsor=findonefichesortie(id_fiche);
 		ficsor.setLibelle(libelle);
@@ -937,6 +952,80 @@ public class MemoireMetierImpl implements MemoireMetier{
 		bonl=findonelivraison(id_bonliv);
 		bonl.setEtat(0);
 		blrepo.save(bonl);
+	}
+	@Override
+	public void deletedetailliv(Long id_detail) {
+		// TODO Auto-generated method stub
+		DetailLivraison dtl=new DetailLivraison();
+		dtl=findonedetaillivraison(id_detail);
+		dtl.setEtat(0);
+		detlivrepo.save(dtl);
+	}
+	@Override
+	public DetailLivraison findonedetaillivraison(Long id_detail) {
+		// TODO Auto-generated method stub
+		return detlivrepo.findonedetaillivraison(id_detail);
+	}
+	@Override
+	public void updatelivraison(Long idbon,List<String> tamp, String titre, Long id_boncommande, Long id_fourni,
+			List<Long> iddetail) {
+		// TODO Auto-generated method stub
+		BonLivraison bol=new BonLivraison();
+		bol=findonelivraison(idbon);
+		bol.setTitre(titre);
+		BonCommande bc=new BonCommande();
+		bc=findoneboncommande(id_boncommande);
+		Fournisseur fou=findonefournisseur(id_fourni);
+		bol.setBoncommandes(bc);
+		bol.setFournisseurs(fou);
+		bol.setDate(new Date());
+		blrepo.save(bol);
+		int k=0;
+		Long iddet[] = iddetail.toArray(new Long[0]);
+		for (String string : tamp) {
+			String[] parts = string.split("-");
+			String part1 = parts[0];
+			int qte=Integer.parseInt(part1);
+			Long produit=Long.parseLong(parts[1]);
+			Produit prod=new Produit();
+			prod=findoneproduit(produit);
+			Double prix=Double.parseDouble(parts[2]);
+			DetailLivraison detliv=new DetailLivraison();
+			detliv=findonedetaillivraison(iddet[k]);
+			detliv.setBonlivraisons(bol);
+			detliv.setDate(new Date());
+			detliv.setPrix(prix);
+			detliv.setQte(qte);
+			detliv.setProduits(prod);
+			detlivrepo.save(detliv);
+			k++;
+		}
+	}
+	@Override
+	public void savemodiflivraison(List<String> tamp, BonLivraison bliv) {
+		// TODO Auto-generated method stub
+		for (String string : tamp) {
+			String[] parts = string.split("-");
+			String part1 = parts[0];
+			int qte=Integer.parseInt(part1);
+			Long produit=Long.parseLong(parts[1]);
+			Produit prod=new Produit();
+			prod=findoneproduit(produit);
+			Double prix=Double.parseDouble(parts[2]);
+			DetailLivraison detliv=new DetailLivraison();
+			detliv.setBonlivraisons(bliv);
+			detliv.setDate(new Date());
+			detliv.setPrix(prix);
+			detliv.setQte(qte);
+			detliv.setProduits(prod);
+			detliv.setEtat(1);
+			detlivrepo.save(detliv);
+		}
+	}
+	@Override
+	public DetailBon detailbyboncommande(Long id_bon) {
+		// TODO Auto-generated method stub
+		return detbonrepo.detailbyboncommande(id_bon);
 	}
 	
 
