@@ -1,94 +1,142 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
-<meta charset="utf-8"/>
-<title>Inscription</title>
-<link rel="stylesheet" type="text/css" href="../static/css/inscription.css"
-	th:href="@{/css/inscription.css}" />
-</head>
-<body>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <!-- CORE CSS-->
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/css/materialize.min.css"/>
 
-<div class="container">
-  <form>
-    <div class="row">
-      <h4>Account</h4>
-      <div class="input-group input-group-icon">
-        <input type="text" placeholder="Full Name"/>
-        <div class="input-icon"><i class="fa fa-user"></i></div>
-      </div>
-      <div class="input-group input-group-icon">
-        <input type="email" placeholder="Email Adress"/>
-        <div class="input-icon"><i class="fa fa-envelope"></i></div>
-      </div>
-      <div class="input-group input-group-icon">
-        <input type="password" placeholder="Password"/>
-        <div class="input-icon"><i class="fa fa-key"></i></div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-half">
-        <h4>Date of Birth</h4>
-        <div class="input-group">
-          <div class="col-third">
-            <input type="text" placeholder="DD"/>
+<style type="text/css">
+html,
+body {
+    height: 100%;
+}
+html {
+    display: table;
+    margin: auto;
+}
+body {
+    display: table-cell;
+    vertical-align: middle;
+}
+.margin {
+  margin: 0 !important;
+}
+</style>
+  
+</head>
+
+<body class="blue">
+
+
+  <div id="login-page" class="row">
+    <div class="col s12 z-depth-6 card-panel">
+      <form class="login-form" th:action="@{/validerinscription}">
+        <div class="row">
+          <div class="input-field col s12 center">
+           
           </div>
-          <div class="col-third">
-            <input type="text" placeholder="MM"/>
+        </div>
+          <div class="row margin">
+          <div class="input-field col s12">
+            <i class="mdi-social-person-outline prefix"></i>
+            <input id="nom" type="text" class="validate" name="nom" required="true"/>
+            <label for="nom" class="center-align">Nom</label>
           </div>
-          <div class="col-third">
-            <input type="text" placeholder="YYYY"/>
+        </div>
+            <div class="row margin">
+          <div class="input-field col s12">
+            <i class="mdi-social-person-outline prefix"></i>
+            <input id="nom" type="text" class="validate" name="prenom" required="true"/>
+            <label for="prenom" class="center-align">Prenom</label>
           </div>
         </div>
-      </div>
-      <div class="col-half">
-        <h4>Gender</h4>
-        <div class="input-group">
-          <input type="radio" name="gender" value="male" id="gender-male"/>
-          <label for="gender-male">Male</label>
-          <input type="radio" name="gender" value="female" id="gender-female"/>
-          <label for="gender-female">Female</label>
+          <div class="row margin">
+          <div class="input-field col s12">
+            <i class="mdi-social-person-outline prefix"></i>
+            <input id="nom" type="text" class="validate" name="adresse" required="true"/>
+            <label for="adresse" class="center-align">Adresse</label>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="row">
-      <h4>Payment Details</h4>
-      <div class="input-group">
-        <input type="radio" name="payment-method" value="card" id="payment-method-card" checked="true"/>
-        <label for="payment-method-card"><span><i class="fa fa-cc-visa"></i>Credit Card</span></label>
-        <input type="radio" name="payment-method" value="paypal" id="payment-method-paypal"/>
-        <label for="payment-method-paypal"> <span><i class="fa fa-cc-paypal"></i>Paypal</span></label>
-      </div>
-      <div class="input-group input-group-icon">
-        <input type="text" placeholder="Card Number"/>
-        <div class="input-icon"><i class="fa fa-credit-card"></i></div>
-      </div>
-      <div class="col-half">
-        <div class="input-group input-group-icon">
-          <input type="text" placeholder="Card CVC"/>
-          <div class="input-icon"><i class="fa fa-user"></i></div>
+         <div class="row margin">
+          <div class="input-field col s12">
+            <i class="mdi-social-person-outline prefix"></i>
+            <input id="nom" type="text" class="validate" name="tel" required="true"/>
+            <label for="telephone" class="center-align">Numero Téléphone</label>
+          </div>
         </div>
-      </div>
-      <div class="col-half">
-        <div class="input-group">
-          <select>
-            <option>01 Jan</option>
-            <option>02 Jan</option>
-          </select>
-          <select>
-            <option>2015</option>
-            <option>2016</option>
-          </select>
+        <div class="row margin">
+          <div class="input-field col s12">
+            <i class="mdi-social-person-outline prefix"></i>
+            <input id="username" type="text" class="validate" name="username" required="true"/>
+            <label for="username" class="center-align">Username</label>
+          </div>
         </div>
-      </div>
+        <div class="row margin">
+          <div class="input-field col s12">
+            <i class="mdi-communication-email prefix"></i>
+            <input id="email" type="email" class="validate" name="email" required="true"/>
+            <label for="email" class="center-align">Email</label>
+          </div>
+        </div>
+        <div class="row margin">
+          <div class="input-field col s12">
+            <i class="mdi-action-lock-outline prefix"></i>
+            <input id="password" type="password" class="validate" name="password" required="true"/>
+            <label for="password">Password</label>
+          </div>
+        </div>
+        <div class="row margin">
+          <div class="input-field col s12">
+            <i class="mdi-action-lock-outline prefix"></i>
+            <input id="password-again" type="password" name="password1" required="true"/>
+            <label for="password-again">Re-type password</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+          <div class="text-danger"
+							th:text="${#httpServletRequest.getParameter('error')}"></div>
+            <button  class="btn waves-effect waves-light col s12">Valider</button>
+          </div>
+        </div>
+      </form>
     </div>
-    <div class="row">
-      <h4>Terms and Conditions</h4>
-      <div class="input-group">
-        <input type="checkbox" id="terms"/>
-        <label for="terms">I accept the terms and conditions for signing up to this service, and hereby confirm I have read the privacy policy.</label>
-      </div>
-    </div>
-  </form>
-</div>
+  </div>
+
+
+  <center>
+    <script src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Post Page - Responsive -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:300px;height:250px"
+     data-ad-client="ca-pub-5104998679826243"
+     data-ad-slot="3470684978"></ins>
+</center>
+
+  <!-- ================================================
+    Scripts
+    ================================================ -->
+
+  <!-- jQuery Library -->
+ <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <!--materialize js-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/js/materialize.min.js"></script>
+
+
+
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-27820211-3', 'auto');
+  ga('send', 'pageview');
+
+</script><script src="//load.sumome.com/" data-sumo-site-id="1cf2c3d548b156a57050bff06ee37284c67d0884b086bebd8e957ca1c34e99a1" async="async"></script>
 </body>
+
 </html>

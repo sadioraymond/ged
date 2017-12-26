@@ -13,10 +13,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.print.attribute.standard.DateTimeAtCompleted;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.JOptionPane;
 
@@ -29,6 +31,7 @@ import org.sid.entities.BonSortie;
 import org.sid.entities.Categorie;
 import org.sid.entities.DemandeAchat;
 import org.sid.entities.DemandeAppro;
+import org.sid.entities.DemandePrestation;
 import org.sid.entities.DetailBon;
 import org.sid.entities.DetailCommande;
 import org.sid.entities.DetailFiche;
@@ -42,12 +45,14 @@ import org.sid.entities.Fournisseur;
 import org.sid.entities.Personne;
 import org.sid.entities.Poste;
 import org.sid.entities.Produit;
+import org.sid.entities.Roles;
 import org.sid.entities.Service;
 import org.sid.entities.Utilisateur;
 import org.sid.metier.Impression;
 import org.sid.metier.MemoireMetier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,6 +63,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.qoppa.pdf.TIFFOptions;
+import com.qoppa.pdfProcess.PDFDocument;
+
 @Controller
 public class MemoireController {
 	@Autowired
@@ -67,10 +75,28 @@ public class MemoireController {
     private static String UPLOADED_FOLDER = "E:\\temp/";
 	//private Impression impression;
     JOptionPane jop1;
+    
     @RequestMapping("/creationdoc")
-	public String creationdoc() {
+	public String creationdoc(Model model) {
+    	String nomfic="CdC-appli-Ouvaton.pdf.tif";
+    	model.addAttribute("nomfic", nomfic);
 		return "uploaddoc";
 	}
+	 @RequestMapping("/scanne")
+		public void scanne() {
+			try
+	        {
+	            PDFDocument pdfDoc = new PDFDocument ("C:\\Users\\Raymond SADIO\\Downloads\\Documents/15-COURS_MSI_Urbanisation_exo_Corr.pdf", null);
+	            TIFFOptions options = new TIFFOptions (150, TIFFOptions.TIFF_PACKBITS);
+	            FileOutputStream outStream = new FileOutputStream ("C:\\Users\\Raymond SADIO\\Downloads\\Documents/15-COURS_MSI_Urbanisation_exo_Corr.tif");
+	            pdfDoc.saveDocumentAsTIFF(outStream, options);
+	            outStream.close();
+	        }
+	        catch (Throwable t)
+	        {
+	            t.printStackTrace();
+	        }
+		}
 	 @RequestMapping("/demandeachat")
 		public String demandeachat() {
 			return "demandeachat";
@@ -229,6 +255,23 @@ public class MemoireController {
 					}
 				return "historiquedemandeappro";
 			}
+			 @RequestMapping("/historiqueprestation")
+			public String historiqueprestation(Model model, @RequestParam(name = "page", defaultValue = "0") int page,
+					@RequestParam(name = "size", defaultValue = "5") int size) {
+					try {
+						String typedoc="DP";
+						Page<DemandePrestation> pagePrest=memoiremetier.listPrestation(typedoc, page, size);
+						model.addAttribute("listprest", pagePrest.getContent());
+						int [] pages=new int [pagePrest.getTotalPages()];
+						model.addAttribute("pages",pages);
+						/*model.addAttribute("valide", true);
+						model.addAttribute("nonvalide", false);*/
+					} catch (Exception e) {
+						// TODO: handle exception
+						model.addAttribute("exception", e);
+					}
+				return "historiquedemandeprest";
+			}
     @RequestMapping("/creationdocument")
    	public String creationdocument(Model model, @RequestParam(name = "page", defaultValue = "0") int page,
 			@RequestParam(name = "size", defaultValue = "5") int size) {
@@ -245,9 +288,43 @@ public class MemoireController {
 		}
    		return "upload";
    	}
+    @RequestMapping("/numerisationprestation")
+   	public String numerisationprestation(Model model) {
+    	
+   		return "numerisation";
+   	}
     @RequestMapping("/ajoututilisateur")
-    private String ajoututilisateur() {
-    	return "ajout_utilisateur";
+    private String ajoututilisateur(Model model, @RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "5") int size) {
+    	try {
+			Page<Utilisateur> pageUtili=memoiremetier.listusernonval(page, size);
+			model.addAttribute("listuser", pageUtili.getContent());
+			int [] pages=new int [pageUtili.getTotalPages()];
+			model.addAttribute("pages",pages);
+		} catch (Exception e) {
+			// TODO: handle exception
+			model.addAttribute("exception", e);
+		}
+    	return "valideruser";
+    }
+    @RequestMapping("/findoneuserandmodif")
+    private String findoneuserandmodif(Model model,@RequestParam(name="id_user") Long id_user) {
+    	Utilisateur us=memoiremetier.findoneuser(id_user);
+    	model.addAttribute("nom", us.getNom_user());
+    	model.addAttribute("prenom", us.getPrenom_user());
+    	model.addAttribute("adresse", us.getAdresse());
+    	model.addAttribute("email", us.getEmail());
+    	List<Roles> listrole=memoiremetier.allroles();
+    	model.addAttribute("listrole", listrole);
+    	model.addAttribute("user", us.getId_user());
+    	return "activeruser";
+    }
+    @RequestMapping("/activeruser")
+    private String activeruser(Model model,@RequestParam(name="optionsListId") Long optionsListId,
+    		@RequestParam(name="user") Long user) {
+    	memoiremetier.activeruser(user);
+    	memoiremetier.saveuserrole(optionsListId, user);
+    	return "redirect:ajoututilisateur";
     }
     @RequestMapping("/ajoutservice")
     private String ajoutservice() {
@@ -310,13 +387,26 @@ public class MemoireController {
          
         return encodedfile;
     }
-    @PostMapping("/upload") // //new annotation since 4.3
-    public String singleFileUpload(Model model,@RequestParam("file") MultipartFile file,
-                                   RedirectAttributes redirectAttributes,@RequestParam(name="idChecked")
-    List<String> list) {
+    
+    @PostMapping("/savePrestation")
+ 	public String savePrestation(Model model,@RequestParam(name="idChecked") List<String> idChecked,
+ 			@RequestParam(name="iddoc") Long iddoc) {
+    	
+    	String stringArray[] = idChecked.toArray(new String[0]);
+    	memoiremetier.savedroitattribue(iddoc, stringArray);
+    	return "redirect:numerisationprestation";
+    }
+    @PostMapping("/modifierprest") // //new annotation since 4.3
+    public String modifierprest(Model model,@RequestParam("file") MultipartFile file,
+                                   RedirectAttributes redirectAttributes,
+                                   String titre,String demandeur,String objet,
+                                   @RequestParam(name = "page", defaultValue = "0") int page,
+                       			@RequestParam(name = "size", defaultValue = "5") int size,
+                       			@RequestParam(name="idChecked") List<String> idChecked,
+                       			@RequestParam(name="iddoc") Long iddoc,@RequestParam(name="iddetail") List<Long> iddetail) {
 
         if (file.isEmpty()) {
-            redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
+            redirectAttributes.addFlashAttribute("message", "Choisissez un fichier");
             return "redirect:uploadStatus";
         }
 
@@ -332,17 +422,87 @@ public class MemoireController {
 
         } catch (IOException e) {
             e.printStackTrace();
+        } 
+    	try
+        {
+    		
+            PDFDocument pdfDoc = new PDFDocument ("E:\\temp/"+""+file.getOriginalFilename(), null);
+            TIFFOptions options = new TIFFOptions (150, TIFFOptions.TIFF_PACKBITS);
+            Documents docs=memoiremetier.dernierdoc();
+            String nom="DP"+docs.getIddoc();
+            FileOutputStream outStream = new FileOutputStream ("C:\\Users\\Raymond SADIO\\memoire-workspace\\memoire\\src\\main\\resources\\static\\assets\\img/"+""+nom+".tif");
+            pdfDoc.saveDocumentAsTIFF(outStream, options);
+            outStream.close();
+            String nomfic=nom+".tif";
+            String stringArray[] = idChecked.toArray(new String[0]);
+            memoiremetier.updatedemandeprest(iddoc, titre, objet, demandeur, nomfic,stringArray,iddetail);
         }
-       
-       /* jop1 = new JOptionPane();
-        jop1.showMessageDialog(null, "Document Enregistr", "Information", JOptionPane.INFORMATION_MESSAGE);*/
-       // memoiremetier.savedemandeachat(file.getContentType());
-        Documents doc=memoiremetier.dernierdoc();
-        model.addAttribute("nom", doc.getIddoc());
-        String stringArray[] = list.toArray(new String[0]);
-        model.addAttribute("list", stringArray);
-        memoiremetier.savedroitattribue(doc.getIddoc(), stringArray);
-        return "uploadStatus";
+        catch (Throwable t)
+        {
+            t.printStackTrace();
+        }
+        return "redirect:historiqueprestation";
+    }
+    @PostMapping("/uploadprest") // //new annotation since 4.3
+    public String uploadprest(Model model,@RequestParam("file") MultipartFile file,
+                                   RedirectAttributes redirectAttributes,
+                                   String titre,String demandeur,String objet,
+                                   @RequestParam(name = "page", defaultValue = "0") int page,
+                       			@RequestParam(name = "size", defaultValue = "5") int size) {
+
+        if (file.isEmpty()) {
+            redirectAttributes.addFlashAttribute("message", "Choisissez un fichier");
+            return "redirect:uploadStatus";
+        }
+
+        try {
+
+            // Get the file and save it somewhere
+            byte[] bytes = file.getBytes();
+            Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
+            Files.write(path, bytes);
+
+            redirectAttributes.addFlashAttribute("message",
+                    "You successfully uploaded '" + file.getOriginalFilename() + "'");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+    	try
+        {
+    		
+            PDFDocument pdfDoc = new PDFDocument ("E:\\temp/"+""+file.getOriginalFilename(), null);
+            TIFFOptions options = new TIFFOptions (150, TIFFOptions.TIFF_PACKBITS);
+            Documents docs=memoiremetier.dernierdoc();
+            String nom="DP"+docs.getIddoc();
+            FileOutputStream outStream = new FileOutputStream ("C:\\Users\\Raymond SADIO\\memoire-workspace\\memoire\\src\\main\\resources\\static\\assets\\img/"+""+nom+".tif");
+            pdfDoc.saveDocumentAsTIFF(outStream, options);
+            outStream.close();
+            String nomfic=nom+".tif";
+            memoiremetier.savedemandeprestation(titre, objet, demandeur, nomfic);
+            Documents doc=memoiremetier.dernierdoc();
+            DemandePrestation dp=memoiremetier.findonedp(doc.getIddoc());
+            model.addAttribute("titre", dp.getTitre());
+            model.addAttribute("objet", dp.getObjet());
+            model.addAttribute("demandeur", dp.getDemandeur());
+            model.addAttribute("iddoc", dp.getIddoc());
+        }
+        catch (Throwable t)
+        {
+            t.printStackTrace();
+        }
+     	try {
+			Page<Utilisateur> pageUsers = memoiremetier.listUser(page, size);
+			model.addAttribute("listuser", pageUsers.getContent());
+			int [] pages=new int [pageUsers.getTotalPages()];
+			model.addAttribute("pages",pages);
+			Page<DroitDacces> pageDroits=memoiremetier.listdroit(page, size);
+			model.addAttribute("listdroit", pageDroits.getContent());
+		} catch (Exception e) {
+			// TODO: handle exception
+			model.addAttribute("exception", e);
+		}
+        return "upload";
     }
     
     @GetMapping("/uploadStatus")
@@ -351,10 +511,23 @@ public class MemoireController {
     }
     
 	@RequestMapping("/acceuil")
-	public String acceuil() {
+	public String acceuil(Model model,Authentication authentication) {
+		String username=authentication.getName();
+		model.addAttribute("username", username);
 		return "acceuil";
 	}
-
+	@RequestMapping("validerinscription")
+	public String validerinscription(Model model,String nom,String prenom,String email,String adresse,String username,
+			String password,String password1,String tel) {
+		try {
+			memoiremetier.saveuser(nom, prenom, email, adresse, username, password, password1, tel);
+		} catch (Exception e) {
+			// TODO: handle exception
+			model.addAttribute("error", e);
+			return "redirect:inscription?"+"&error="+e.getMessage();
+		}
+		return "redirect:login";
+	}
 	@RequestMapping("/inscription")
 	public String inscription() {
 		return "inscription";
@@ -843,6 +1016,39 @@ public class MemoireController {
 		List<DetailCommande> dtcom=memoiremetier.detailbycommande(bonach.getId_boncommande());
 		model.addAttribute("detailcom", dtcom);
 		return "voircommande";
+	}
+	@RequestMapping(value="/findoneprestation", method = RequestMethod.GET)
+	public String findoneprestation(Model model,@RequestParam(name="iddoc")Long iddoc) {
+		DemandePrestation demprest=new DemandePrestation();
+		String typedoc="DP";
+		demprest=memoiremetier.findoneprestation(iddoc, typedoc);
+		model.addAttribute("titre", demprest.getTitre());
+		model.addAttribute("objet", demprest.getObjet());
+		model.addAttribute("demandeur", demprest.getDemandeur());
+		model.addAttribute("iddoc", demprest.getIddoc());
+		model.addAttribute("nomfichier", demprest.getNomfichier());
+		return "voirprestation";
+	}
+	@RequestMapping(value="/deleteprest", method = RequestMethod.GET)
+	public String deleteprest(Model model,@RequestParam(name="iddoc")Long iddoc) {
+		memoiremetier.deleteprest(iddoc);
+		return "redirect:historiqueprestation";
+	}
+	@RequestMapping(value="/findoneprestandupdate", method = RequestMethod.GET)
+	public String findoneprestandupdate(Model model,@RequestParam(name="iddoc")Long iddoc) {
+		DemandePrestation demprest=new DemandePrestation();
+		String typedoc="DP";
+		demprest=memoiremetier.findoneprestation(iddoc, typedoc);
+		model.addAttribute("titre", demprest.getTitre());
+		model.addAttribute("objet", demprest.getObjet());
+		model.addAttribute("demandeur", demprest.getDemandeur());
+		model.addAttribute("iddoc", demprest.getIddoc());
+		model.addAttribute("nomfichier", demprest.getNomfichier());
+		List<DroitAttribues> listdroi=memoiremetier.listdroitattr(iddoc);
+		model.addAttribute("listdroi", listdroi);
+		List<Utilisateur> lisuti=memoiremetier.listutibydroi(listdroi);
+		model.addAttribute("lisuti", lisuti);
+		return "modifierdemandeprest";
 	}
 	@RequestMapping(value="/findonebonlivraison", method = RequestMethod.GET)
 	public String findonebonlivraison(Model model,@RequestParam(name="id_bonlivraison")Long id_bonlivraison) {

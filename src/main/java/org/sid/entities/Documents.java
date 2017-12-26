@@ -31,6 +31,8 @@ private Utilisateur usercreateur;
 @OneToMany(mappedBy="documentss", fetch= FetchType.LAZY)
 private Collection<ConsultationDocument> consultationdocuments;
 private String titre;
+private String nomfichier;
+private int etat;
 public Documents() {
 	super();
 	// TODO Auto-generated constructor stub
@@ -39,6 +41,18 @@ public Long getIddoc() {
 	return iddoc;
 }
 
+public int getEtat() {
+	return etat;
+}
+public void setEtat(int etat) {
+	this.etat = etat;
+}
+public String getNomfichier() {
+	return nomfichier;
+}
+public void setNomfichier(String nomfichier) {
+	this.nomfichier = nomfichier;
+}
 public Utilisateur getUsercreateur() {
 	return usercreateur;
 }

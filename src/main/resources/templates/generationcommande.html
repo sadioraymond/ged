@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	xmlns:layout="http://www.uktraq.net.nz/thymeleaf/layout"
+	>
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,20 +11,30 @@
 <meta name="keyword"
 	content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina" />
 
-<title>DASHGUM - Bootstrap Admin Template</title>
-
+<title>GED AND SAE</title>
 <!-- Bootstrap core CSS -->
-<link href="assets/css/bootstrap.css" rel="stylesheet" />
+<link href="../static/assets/css/bootstrap.css" rel="stylesheet"
+	type="text/css" th:href="@{/assets/css/bootstrap.css}" />
 <!--external css-->
-<link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+<link href="../static/assets/font-awesome/css/font-awesome.css"
+	rel="stylesheet" th:href="@{/assets/font-awesome/css/font-awesome.css}" />
 <link rel="stylesheet" type="text/css"
-	href="assets/js/bootstrap-datepicker/css/datepicker.css" />
+	href="../static/assets/css/zabuto_calendar.css"
+	th:href="@{/assets/css/zabuto_calendar.css}" />
 <link rel="stylesheet" type="text/css"
-	href="assets/js/bootstrap-daterangepicker/daterangepicker.css" />
+	href="../static/assets/js/gritter/css/jquery.gritter.css"
+	th:href="@{/assets/js/gritter/css/jquery.gritter.css}" />
+<link rel="stylesheet" type="text/css"
+	href="../static/assets/lineicons/style.css"
+	th:href="@{/assets/lineicons/style.css}" />
 
 <!-- Custom styles for this template -->
-<link href="assets/css/style.css" rel="stylesheet" />
-<link href="assets/css/style-responsive.css" rel="stylesheet" />
+<link href="../static/assets/css/style.css" rel="stylesheet"
+	th:href="@{/assets/css/style.css}" />
+<link href="../static/assets/css/style-responsive.css" rel="stylesheet"
+	th:href="@{/assets/css/style-responsive.css}" />
+
+<script src="../static/assets/js/chart-master/Chart.js"></script>
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
@@ -43,120 +56,24 @@
 					data-original-title="Toggle Navigation"></div>
 			</div>
 			<!--logo start-->
-			<a href="acceuil.html" class="logo"><b>DASHGUM FREE</b></a>
+			<a href="acceuil.html" class="logo"><b>Electro Mechanical Works</b></a>
 			<!--logo end-->
 			<div class="nav notify-row" id="top_menu">
 				<!--  notification start -->
 				<ul class="nav top-menu">
 					<!-- settings start -->
-					<li class="dropdown"><a data-toggle="dropdown"
-						class="dropdown-toggle" href="acceuil.html#"> <i
-							class="fa fa-tasks"></i> <span class="badge bg-theme">4</span>
-					</a>
-						<ul class="dropdown-menu extended tasks-bar">
-							<div class="notify-arrow notify-arrow-green"></div>
-							<li>
-								<p class="green">You have 4 pending tasks</p>
-							</li>
-							<li><a href="acceuil.html#">
-									<div class="task-info">
-										<div class="desc">DashGum Admin Panel</div>
-										<div class="percent">40%</div>
-									</div>
-									<div class="progress progress-striped">
-										<div class="progress-bar progress-bar-success"
-											role="progressbar" aria-valuenow="40" aria-valuemin="0"
-											aria-valuemax="100" style="width: 40%">
-											<span class="sr-only">40% Complete (success)</span>
-										</div>
-									</div>
-							</a></li>
-							<li><a href="acceuil.html#">
-									<div class="task-info">
-										<div class="desc">Database Update</div>
-										<div class="percent">60%</div>
-									</div>
-									<div class="progress progress-striped">
-										<div class="progress-bar progress-bar-warning"
-											role="progressbar" aria-valuenow="60" aria-valuemin="0"
-											aria-valuemax="100" style="width: 60%">
-											<span class="sr-only">60% Complete (warning)</span>
-										</div>
-									</div>
-							</a></li>
-							<li><a href="acceuil.html#">
-									<div class="task-info">
-										<div class="desc">Product Development</div>
-										<div class="percent">80%</div>
-									</div>
-									<div class="progress progress-striped">
-										<div class="progress-bar progress-bar-info" role="progressbar"
-											aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"
-											style="width: 80%">
-											<span class="sr-only">80% Complete</span>
-										</div>
-									</div>
-							</a></li>
-							<li><a href="acceuil.html#">
-									<div class="task-info">
-										<div class="desc">Payments Sent</div>
-										<div class="percent">70%</div>
-									</div>
-									<div class="progress progress-striped">
-										<div class="progress-bar progress-bar-danger"
-											role="progressbar" aria-valuenow="70" aria-valuemin="0"
-											aria-valuemax="100" style="width: 70%">
-											<span class="sr-only">70% Complete (Important)</span>
-										</div>
-									</div>
-							</a></li>
-							<li class="external"><a href="#">See All Tasks</a></li>
-						</ul></li>
+					
 					<!-- settings end -->
 					<!-- inbox dropdown start-->
-					<li id="header_inbox_bar" class="dropdown"><a
-						data-toggle="dropdown" class="dropdown-toggle"
-						href="acceuil.html#"> <i class="fa fa-envelope-o"></i> <span
-							class="badge bg-theme">5</span>
-					</a>
-						<ul class="dropdown-menu extended inbox">
 							<div class="notify-arrow notify-arrow-green"></div>
-							<li>
-								<p class="green">You have 5 new messages</p>
-							</li>
-							<li><a href="acceuil.html#"> <span class="photo"><img
-										alt="avatar" src="assets/img/ui-zac.jpg" /></span> <span
-									class="subject"> <span class="from">Zac Snider</span> <span
-										class="time">Just now</span>
-								</span> <span class="message"> Hi mate, how is everything? </span>
-							</a></li>
-							<li><a href="acceuil.html#"> <span class="photo"><img
-										alt="avatar" src="assets/img/ui-divya.jpg" /></span> <span
-									class="subject"> <span class="from">Divya Manian</span>
-										<span class="time">40 mins.</span>
-								</span> <span class="message"> Hi, I need your help with this. </span>
-							</a></li>
-							<li><a href="acceuil.html#"> <span class="photo"><img
-										alt="avatar" src="assets/img/ui-danro.jpg" /></span> <span
-									class="subject"> <span class="from">Dan Rogers</span> <span
-										class="time">2 hrs.</span>
-								</span> <span class="message"> Love your new Dashboard. </span>
-							</a></li>
-							<li><a href="acceuil.html#"> <span class="photo"><img
-										alt="avatar" src="assets/img/ui-sherman.jpg" /></span> <span
-									class="subject"> <span class="from">Dj Sherman</span> <span
-										class="time">4 hrs.</span>
-								</span> <span class="message"> Please, answer asap. </span>
-							</a></li>
-							<li><a href="acceuil.html#">See all messages</a></li>
-						</ul></li>
+						
 					<!-- inbox dropdown end -->
 				</ul>
 				<!--  notification end -->
 			</div>
 			<div class="top-menu">
 				<ul class="nav pull-right top-menu">
-					<li><a class="logout" href="login.html">Logout</a></li>
+					<li><a class="logout" th:href="@{/login?logout}">Logout</a></li>
 				</ul>
 			</div>
 		</header>
@@ -175,64 +92,96 @@
 						<a href="profile.html"><img src="assets/img/ui-sam.jpg"
 							class="img-circle" width="60" /></a>
 					</p>
-					<h5 class="centered">Marcel Newman</h5>
-
-					<li class="mt"><a href="acceuil.html"> <i
-							class="fa fa-dashboard"></i> <span>Dashboard</span>
-					</a></li>
-
+					<h5 class="centered" th:text="${username}"></h5>
+					<div sec:authorize="hasRole('ROLE_ADMIN')">
+						<li class="sub-menu">
+					<a href="javascript:;"> 
+					<i class="fa fa-desktop"></i> 
+					<span>Gestion Service et Poste</span>
+					</a>
+						<ul class="sub">
+							<li><a th:href="@{/ajoutservice}">Ajout Service</a></li>
+							<li><a th:href="@{/allservices}">Liste des Services</a></li>
+							<li><a th:href="@{/ajoutposte}">Ajout Poste</a></li>
+							<li><a th:href="@{/allpostes}">Liste des Postes</a></li>
+						</ul>
+					</li>
+					</div>
+				
 					<li class="sub-menu"><a href="javascript:;"> <i
-							class="fa fa-desktop"></i> <span>UI Elements</span>
+							class="fa fa-cogs"></i> <span>Gestion Utilisateurs</span>
 					</a>
 						<ul class="sub">
-							<li><a href="general.html">General</a></li>
-							<li><a href="buttons.html">Buttons</a></li>
-							<li><a href="panels.html">Panels</a></li>
-						</ul></li>
-
-					<li class="sub-menu"><a href="javascript:;"> <i
-							class="fa fa-cogs"></i> <span>Components</span>
-					</a>
-						<ul class="sub">
-							<li><a href="calendar.html">Calendar</a></li>
-							<li><a href="gallery.html">Gallery</a></li>
-							<li><a href="todo_list.html">Todo List</a></li>
-						</ul></li>
-					<li class="sub-menu"><a href="javascript:;"> <i
-							class="fa fa-book"></i> <span>Extra Pages</span>
-					</a>
-						<ul class="sub">
-							<li><a href="blank.html">Blank Page</a></li>
-							<li><a href="login.html">Login</a></li>
-							<li><a href="lock_screen.html">Lock Screen</a></li>
-						</ul></li>
-					<li class="sub-menu"><a class="active" href="javascript:;">
-							<i class="fa fa-tasks"></i> <span>Forms</span>
-					</a>
-						<ul class="sub">
-							<li class="active"><a href="form_component.html">Ajout
-									Produit</a></li>
+							<li><a th:href="@{/ajoututilisateur}">Verification
+									Utilisateur</a></li>
 						</ul></li>
 					<li class="sub-menu"><a href="javascript:;"> <i
-							class="fa fa-th"></i> <span>Data Tables</span>
+							class="fa fa-book"></i> <span>Gestion Documents</span>
 					</a>
 						<ul class="sub">
-							<li><a href="basic_table.html">Basic Table</a></li>
-							<li><a href="responsive_table.html">Responsive Table</a></li>
+							<li><a th:href="@{/numerisationprestation}">Numérisation
+									Demande Prestation</a></li>
+							<li><a th:href="@{/historiqueprestation}">Historique
+									Demande Prestation</a></li>
+							<li><a th:href="@{/demandeachat}">Création demande
+									d'achat</a></li>
+							<li><a th:href="@{/historiquedemandeachat}">Historique
+									demande d'achat</a></li>
+							<li><a th:href="@{/historiquedemandeappro}">Historique
+									demande d'approvisionnement</a></li>
 						</ul></li>
 					<li class="sub-menu"><a href="javascript:;"> <i
-							class=" fa fa-bar-chart-o"></i> <span>Charts</span>
+							class="fa fa-book"></i> <span>Gestion Commandes</span>
 					</a>
 						<ul class="sub">
-							<li><a href="morris.html">Morris</a></li>
-							<li><a href="chartjs.html">Chartjs</a></li>
+							<li><a th:href="@{/historiquebonachat}">Liste des Bon
+									d'achat</a></li>
+							<li><a th:href="@{/creationboncommande}">Creation Bon de
+									Commande</a></li>
+							<li><a th:href="@{/historiquebonacommande}">Liste Bon
+									Commande</a></li>
+							<li><a th:href="@{/creationbonlivraison}">Creation Bon
+									de Livraison</a></li>
+							<li><a th:href="@{/historiquebonlivraison}">Liste Bon
+									Livraison</a></li>
+						</ul></li>
+					<li class="sub-menu"><a href="javascript:;"> <i
+							class="fa fa-tasks"></i> <span>Getion Produits</span>
+					</a>
+						<ul class="sub">
+							<li><a th:href="@{/ajoutypeproduit}">Ajout Categorie</a></li>
+						</ul>
+						<ul class="sub">
+							<li><a th:href="@{/allcategories}">Liste Categorie</a></li>
+						</ul>
+						<ul class="sub">
+							<li><a th:href="@{/ajoutproduit}">Ajout Produit</a></li>
+						</ul>
+						<ul class="sub">
+							<li><a th:href="@{/allproduits}">Liste Produit</a></li>
+						</ul></li>
+					<li class="sub-menu"><a href="javascript:;"> <i
+							class="fa fa-th"></i> <span>Gestion Stock</span>
+					</a>
+						<ul class="sub">
+							<li><a th:href="@{/creationfichesortie}">Creation Fiche
+									de Sortie</a></li>
+							<li><a th:href="@{/historiquefichedesortie}">Liste Fiche
+									De Sortie</a></li>
+						</ul></li>
+					<li class="sub-menu"><a href="javascript:;"> <i
+							class=" fa fa-bar-chart-o"></i> <span>Gestion Fournisseur</span>
+					</a>
+						<ul class="sub">
+							<li><a th:href="@{/ajoutfournisseur}">Ajout Fournisseur</a></li>
+							<li><a th:href="@{/historiquefournisseur}">Liste
+									Fournisseur</a></li>
 						</ul></li>
 
 				</ul>
 				<!-- sidebar menu end-->
 			</div>
 		</aside>
-		<!--sidebar end-->
 
 		<!-- **********************************************************************************************************************************************************
       MAIN CONTENT
@@ -304,13 +253,16 @@
 
 		<!--main content end-->
 		<!--footer start-->
-		<footer class="site-footer">
-			<div class="text-center">
-				Build by Raymond SADIO <a href="acceuil.html#" class="go-top"> <i
-					class="fa fa-angle-up"></i>
-				</a>
-			</div>
-		</footer>
+		<div class="navbar-fixed-bottom">
+	<footer class="site-footer">
+          <div class="text-center">
+              Copyright Raymond SADIO
+              <a class="go-top">
+                  <i class="fa fa-angle-up"></i>
+              </a>
+          </div>
+      </footer>
+       </div>
 		<!--footer end-->
 	</section>
 

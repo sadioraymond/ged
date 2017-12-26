@@ -24,7 +24,9 @@ import org.sid.dao.FicheSortieRepository;
 import org.sid.dao.FournisseurRepository;
 import org.sid.dao.PosteRepository;
 import org.sid.dao.ProduitRepository;
+import org.sid.dao.RolesRepository;
 import org.sid.dao.ServiceRepository;
+import org.sid.dao.User_RolesRepository;
 import org.sid.dao.UtilisateurRepository;
 import org.sid.entities.BonCommande;
 import org.sid.entities.BonDachat;
@@ -33,6 +35,7 @@ import org.sid.entities.BonSortie;
 import org.sid.entities.Categorie;
 import org.sid.entities.DemandeAchat;
 import org.sid.entities.DemandeAppro;
+import org.sid.entities.DemandePrestation;
 import org.sid.entities.DetailBon;
 import org.sid.entities.DetailCommande;
 import org.sid.entities.DetailFiche;
@@ -46,6 +49,8 @@ import org.sid.entities.Fournisseur;
 import org.sid.entities.Personne;
 import org.sid.entities.Poste;
 import org.sid.entities.Produit;
+import org.sid.entities.Roles;
+import org.sid.entities.Users_Roles;
 import org.sid.entities.Utilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -99,6 +104,10 @@ public class MemoireMetierImpl implements MemoireMetier{
 	private DetailLivraisonRepository detlivrepo;
 	@Autowired
 	private DetailBonRepository detbonrepo;
+	@Autowired
+	private RolesRepository rolerepo;
+	@Autowired
+	private User_RolesRepository userrolerepo;
 	@Override
 	public void savecategorie(String libelle) {
 		Long nbr=categorierepository.count()+1;
@@ -1026,6 +1035,224 @@ public class MemoireMetierImpl implements MemoireMetier{
 	public DetailBon detailbyboncommande(Long id_bon) {
 		// TODO Auto-generated method stub
 		return detbonrepo.detailbyboncommande(id_bon);
+	}
+	@Override
+	public void savedemandeprestation(String titre, String objet, String demandeur, String nomfichier) {
+		// TODO Auto-generated method stub
+		DemandePrestation demprest=new DemandePrestation();
+		demprest.setTitre(titre);
+		demprest.setObjet(objet);
+		demprest.setDemandeur(demandeur);
+		demprest.setNomfichier(nomfichier);
+		demprest.setDatecreation(new Date());
+		String dp="DP";
+		int nbrs=countdoc(dp);
+		String code_bons="DMP"+nbrs;
+		demprest.setCodeDP(code_bons);
+		demprest.setEtat(1);
+		docrepo.save(demprest);
+	}
+	@Override
+	public int countdoc(String typedoc) {
+		// TODO Auto-generated method stub
+		return docrepo.countdoc(typedoc);
+	}
+	@Override
+	public DemandePrestation findonedp(Long iddoc) {
+		// TODO Auto-generated method stub
+		return docrepo.findonedp(iddoc);
+	}
+	@Override
+	public Page<DemandePrestation> listPrestation(String typedoc, int page, int size) {
+		// TODO Auto-generated method stub
+		return docrepo.listPrestation(typedoc, new PageRequest(page, size));
+	}
+	@Override
+	public DemandePrestation findoneprestation(Long iddoc, String typedoc) {
+		// TODO Auto-generated method stub
+		return docrepo.findoneprestation(iddoc, typedoc);
+	}
+	@Override
+	public void deleteprest(Long iddoc) {
+		// TODO Auto-generated method stub
+		DemandePrestation demprest=findoneprestation(iddoc, "DP");
+		demprest.setEtat(0);
+	}
+	@Override
+	public List<DroitAttribues> listdroitattr(Long iddoc) {
+		// TODO Auto-generated method stub
+		return droitattrrepo.listdroitattr(iddoc);
+	}
+	@Override
+	public List<Utilisateur> listutibydroi(List<DroitAttribues> list) {
+		// TODO Auto-generated method stub
+		List<Utilisateur> listuti=new ArrayList<>();
+		for (DroitAttribues droitAttribues : list) {
+			Utilisateur uti=findoneuser(droitAttribues.getUtilisateurs().getId_user());
+			if(!(listuti.contains(uti))) {
+				listuti.add(uti);
+			}
+			
+		}
+		return listuti;
+	}
+	@Override
+	public void updatedemandeprest(Long iddoc, String titre, String objet, String demandeur, String nomfic,
+			String stringArray[],List<Long> iddetail) {
+		// TODO Auto-generated method stub
+		DemandePrestation dempres=new DemandePrestation();
+		dempres=findoneprestation(iddoc, "DP");
+		dempres.setTitre(titre);
+		dempres.setObjet(objet);
+		dempres.setDemandeur(demandeur);
+		dempres.setNomfichier(nomfic);
+		docrepo.save(dempres);
+		Documents doc=findonedoc(iddoc);
+		List<DroitAttribues> listbi=listdroitattr(iddoc);
+		for (DroitAttribues droitAttribues : listbi) {
+			droitattrrepo.delete(droitAttribues.getIddroitattribues());
+		}
+			for(int i=0;i<stringArray.length;i++) {
+				String[] parts = stringArray[i].split("-");
+				String part1 = parts[0];
+				String part2 = parts[1];
+				long id_user = Long.parseLong(part1);
+				long iddroit = Long.parseLong(part2);
+				Utilisateur use=findoneuser(id_user);
+				DroitDacces dr=findonedroit(iddroit);
+				DroitAttribues drattr=new DroitAttribues();
+				drattr.setDocumentss(doc);
+				drattr.setUtilisateurs(use);
+				drattr.setDroitdaccess(dr);
+				droitattrrepo.save(drattr);
+			}
+		
+	}
+	@Override
+	public void saveuser(String nom,String prenom,String email,String adresse,String username,
+			String password,String password1,String tel) {
+		// TODO Auto-generated method stub
+		Utilisateur us=new Utilisateur();
+		Long nbrs=userrepo.count();
+		String code_bons="DMP"+nbrs;
+		if(!(password.equals(password1))) {
+			throw new RuntimeException("Les mots de passes ne correspondent pas");
+		}
+		if(password.length()<8) {
+			throw new RuntimeException("Le mot de passe doit depasser 8 caracteres");
+		}
+		us.setCode_user(code_bons);
+		us.setNom_user(nom);
+		us.setPrenom_user(prenom);
+		Utilisateur us1=verifemail(email);
+		if(us1!=null) {
+			throw new RuntimeException("Cet Email est deja pris");
+		}else {
+			us.setEmail(email);
+		}
+		us.setAdresse(adresse);
+		us.setPassword(password);
+		us.setTel(tel);
+		us.setActive(false);
+		Utilisateur us2=verifusername(username);
+		if(us2!=null) {
+			throw new RuntimeException("Ce username n est pas disponible");
+		}else {
+			us.setUsername(username);
+		}
+		userrepo.save(us);
+	}
+	@Override
+	public Utilisateur verifusername(String username) {
+		// TODO Auto-generated method stub
+		return userrepo.verifusername(username);
+	}
+	@Override
+	public Utilisateur verifemail(String email) {
+		// TODO Auto-generated method stub
+		return userrepo.verifemail(email);
+	}
+	@Override
+	public Page<Utilisateur> listusernonval(int page, int size) {
+		// TODO Auto-generated method stub
+		return userrepo.listusernonval(new PageRequest(page, size));
+	}
+	@Override
+	public Page<Utilisateur> listuserval(int page, int size) {
+		// TODO Auto-generated method stub
+		return userrepo.listuserval(new PageRequest(page, size));
+	}
+	@Override
+	public List<Roles> allroles() {
+		// TODO Auto-generated method stub
+		List<Roles> listrol=new ArrayList<>();
+		List<Roles> listroles=new ArrayList<>();
+		listrol=rolerepo.findAll();
+		for (Roles roles : listrol) {
+			if(!(roles.getRole().equals("SUPERADMIN")) && !(roles.getRole().equals("ADMIN")) && !(roles.getRole().equals("DG")) ) {
+				listroles.add(roles);
+			}
+		}
+		return listroles;
+	}
+	@Override
+	public void saveuserrole(Long idroles,Long id_user) {
+		// TODO Auto-generated method stub
+		Roles ro=new Roles();
+		Utilisateur us=new Utilisateur();
+		us=findoneuser(id_user);
+		ro=rolerepo.findOne(idroles);
+		if(idroles==3) {
+			Users_Roles usr=new Users_Roles();
+			usr.setRoles(ro.getRole());
+			usr.setUsername(us.getUsername());
+			userrolerepo.save(usr);
+			Users_Roles usrs=new Users_Roles();
+			usrs.setRoles("ED");
+			usrs.setUsername(us.getUsername());
+			userrolerepo.save(usrs);
+			Users_Roles usrss=new Users_Roles();
+			usrss.setRoles("USER");
+			usrss.setUsername(us.getUsername());
+			userrolerepo.save(usrss);
+		}else {
+			if(idroles==4) {
+				Users_Roles usrs=new Users_Roles();
+				usrs.setRoles("ED");
+				usrs.setUsername(us.getUsername());
+				userrolerepo.save(usrs);
+				Users_Roles usrss=new Users_Roles();
+				usrss.setRoles("USER");
+				usrss.setUsername(us.getUsername());
+				userrolerepo.save(usrss);
+			}else {
+				if(idroles==6) {
+					Users_Roles usrss=new Users_Roles();
+					usrss.setRoles("USER");
+					usrss.setUsername(us.getUsername());
+					userrolerepo.save(usrss);
+				}else {
+					if(idroles==7) {
+						Users_Roles usr=new Users_Roles();
+						usr.setRoles(ro.getRole());
+						usr.setUsername(us.getUsername());
+						userrolerepo.save(usr);
+						Users_Roles usrss=new Users_Roles();
+						usrss.setRoles("USER");
+						usrss.setUsername(us.getUsername());
+						userrolerepo.save(usrss);
+					}
+				}
+			}
+		}
+	}
+	@Override
+	public void activeruser(Long id_user) {
+		// TODO Auto-generated method stub
+		Utilisateur us=new Utilisateur();
+		us=findoneuser(id_user);
+		us.setActive(true);
+		userrepo.save(us);
 	}
 	
 
